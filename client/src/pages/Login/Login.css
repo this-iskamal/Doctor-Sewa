@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container-R{
+    display: flex;
+    flex-direction: row;
+}
+.left,.right{
+    width:calc(100vw/2);
+    height: 100vh;
+}
+.left{
+        display: flex;
+        align-items: center;
+        background: url('../../assets/images/left.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+}
+.right{
+    background-color: rgb(191, 212, 222);
+}
+.right h1{
+    text-align: center;
+    margin-top: 50px;
+    font-weight: 100px;
+    font-family: 'Times New Roman', Times, serif;
+    color: rgb(76, 74, 74);
+}
+.right .continue{
+    margin: 0px 150px;
+    margin-top: 120px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.continue a{
+    font-size: 15px;
+    text-decoration: none;
+    color:green;
+}
+.continue h3{
+    font-weight: 100px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.forget{
+    text-align: center;
+}
+.forget a{
+    text-decoration: none;
+    color:green;
+}
+.form{
+    margin:15px 40px;
+}
+.form input{
+    padding: 10px;
+    width: 70%;
+    font-size: 20px;
+    margin: 10px;
+}
+.remember{
+    display: flex;
+    position: relative;
+    left: -160px;
+}
+.remember p{
+    text-align: left;
+    width: 150px;
+    position: relative;
+    left: -10px;
+}
+.remember input{
+    margin: 0;
+    padding: 0;
+    width: 50px;
+}
+
+.copyright{
+    position: relative;
+    top:210px;
+}
+.copyright p{
+    text-align: center;
+    align-items: baseline;
+
+}
+.copyright p a{
+    color:green;
+}
+.checkbox{
+    text-align: center;
+}
+
+.form button{
+    padding: 5px;
+    font-size: 20px;
+    width: 50%;
+    margin-top: 40px;
+    background-color: rgb(104, 180, 105);
+    color: white;
+
+}
+.form button:hover{
+    background-color: rgb(0, 255, 60);
+    color: black;
+    cursor: pointer;    
+}

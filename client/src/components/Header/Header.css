@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'poppins';
+}
+
+header {
+    height: 80px;
+    color: rgb(0, 0, 0);
+    background:transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.logo {
+    margin: 0px 40px;
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+}
+
+nav ul li {
+    list-style-type: none;
+    margin: 0 20px;
+    font-size: 23px;
+
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+
+    padding: 3px 6px;
+}
+
+nav ul li a:hover {
+    color: #ffffff;
+    background-color: rgb(0, 0, 0);
+}
+
+nav ul li .btn {
+    background-color: black;
+    color: white;
+    border-radius: 0px;
+}
+
+.btn{
+
+    color: white;
+    font-size: 23px;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
