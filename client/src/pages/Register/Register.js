@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,20 +31,30 @@ function Register() {
       userdata;
     if (username === "") toast.warn("Enter your name");
     else if (email === "") toast.warn("Enter your email");
-    else if (!email.includes("@"&&".com"))toast.warn("Invalid Email");
+    else if (!email.includes("@" && ".com")) toast.warn("Invalid Email");
     else if (password === "") toast.warn("Enter your password");
+    else if (password.length <= 5) toast.warn("Password must be of 6 length");
     else if (cpassword === "") toast.warn("Enter confirm password");
+    else if (password !== cpassword) toast.warn("Password don't match");
     else if (gender === "") toast.warn("Select your gender");
     else if (phone === "") toast.warn("Enter your phone");
     else if (youare === "") toast.warn("Who you are");
-    else if (password !== cpassword) toast.warn("Password don't match");
-    
     else {
-      toast.success("Success");
-      console.log(userdata);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      axios
+        .post("http://localhost:8078/register", userdata)
+        .then((res) => {
+          if (res.data.success === true) {
+            toast.success(res.data.message);
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+          } else if (res.data.success === false) {
+            toast.warn(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     // if(userdata.youare==='doctor')navigate('/doctorhome')

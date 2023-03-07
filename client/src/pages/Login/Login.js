@@ -1,11 +1,14 @@
 import React from "react";
-import { useState } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
 function Login() {
+
+
   const [logindata, setLogindata] = useState({
     email: "",
     password: "",
@@ -26,13 +29,24 @@ function Login() {
     const { email, password } = logindata;
     if (email === "") toast.warn("Enter your email");
     else if (!email.includes("@" && ".com")) toast.warn("Invalid Email");
+    else if (password.length <= 5) toast.warn("Password must be of 6 length");
     else if (password === "") toast.warn("Enter your password");
     else {
-      toast.success("Success");
-      console.log(logindata);
-      setTimeout(() => {
-        navigate("/loginsuccess");
-      }, 2000);
+      axios.post("http://localhost:8078/login", logindata).then((res) => {
+        if (res.data.success === true) {
+          toast.success(res.data.message);
+          setTimeout(() => {
+            if (res.data.role === "patient") {
+              navigate("/patient-home");
+            }
+            if (res.data.role === "doctor") {
+              navigate("/doctor-home");
+            }
+          }, 2000);
+        } else if (res.data.success === false) {
+          toast.warn(res.data.message);
+        }
+      });
     }
   };
 
