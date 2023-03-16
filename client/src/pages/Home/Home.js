@@ -1,18 +1,17 @@
 import React from "react";
-import "./Home.css";
+import styles from "./Home.module.css";
 import image1 from "../../assets/images/1.png.png";
 import image2 from "../../assets/images/2.png.png";
 import image3 from "../../assets/images/3.png.png";
 import image4 from "../../assets/images/4.png.png";
 import image5 from "../../assets/images/5.png.png";
 import Carousel from "react-multi-carousel";
-import easy from "../../assets/images/easy.jpg";
-import onlinepayment from "../../assets/images/onlinepayment.jpg";
-import schedule from "../../assets/images/schedule.jpg";
 import "react-multi-carousel/lib/styles.css";
 import Header from "../../components/Header/Header";
 
 function Home() {
+
+  
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -35,56 +34,45 @@ function Home() {
   return (
     <>
     <Header/>
-      <div className="container">
+      <div className={styles.container}>
         <h1>Search Doctors, Make an Appointment</h1>
         <h3>Discover The Best Doctor Near You</h3>
-        <div className="sliding-profile">
+        <div className={styles.slidingprofile}>
+          <h2>Appointments with top doctors</h2>
           <Carousel
             responsive={responsive}
             autoPlay={true}
             autoPlaySpeed={3000}
             infinite={true}
           >
-            <div className="imagesection">
+            <div className={styles.imagesection}>
               <img src={image1} alt="" />
             </div>
-            <div className="imagesection">
+            <div className={styles.imagesection}>
               <img src={image2} alt="" />
             </div>
-            <div className="imagesection">
+            <div className={styles.imagesection}>
               <img src={image3} alt="" />
             </div>
-            <div className="imagesection">
+            <div className={styles.imagesection}>
               <img src={image4} alt="" />
             </div>
-            <div className="imagesection">
+            <div className={styles.imagesection}>
               <img src={image5} alt="" />
             </div>
           </Carousel>
         </div>
-        <div className="services">
-          <h1>Our Services</h1>
-          <div className="servicess">
-            <div className="service1">
-              <div className="photo">
-                <img src={schedule} alt="" />
+          <div className={styles.lowersection}>
+              <div className={styles.likecards}>
+                
               </div>
-              <h3>Scheduling Services</h3>
-            </div>
-            <div className="service2">
-              <div className="photo">
-                <img src={onlinepayment} alt="" />
+              <div className={styles.likecards}>
+                
               </div>
-              <h3>Online Payment</h3>
-            </div>
-            <div className="service3">
-              <div className="photo">
-                <img src={easy} alt="" />
+              <div className={styles.likecards}>
+                
               </div>
-              <h3>Easy and Convienince</h3>
-            </div>
           </div>
-        </div>
       </div>
     </>
   );

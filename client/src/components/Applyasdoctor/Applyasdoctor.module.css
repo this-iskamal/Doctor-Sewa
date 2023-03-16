@@ -1,0 +1,80 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    position: absolute;
+    color: rgb(0, 0, 0);
+    height: 100%;
+    width: 100%;
+    background-color: #3FD2C7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.App {
+    display: flex;
+    border-radius: 18px;
+    align-items: center;
+    margin-top: 5px;
+    background-color: #99DDFF;
+}
+
+.fields {
+    width: 40%;
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 700px;
+    padding: 20px;
+    border-radius: 5px;
+    justify-content: space-around;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+input,
+select,
+textarea {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+input[type="file"] {
+    margin-bottom: 20px;
+    border: none;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button[type="submit"] {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e8e41;
+}

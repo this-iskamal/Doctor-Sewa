@@ -1,10 +1,10 @@
 import React from "react";
-import "./Header.css";
+import styles from "./Header.module.css";
 
 function Header() {
   return (
     <header>
-      <div className="logo">
+      <div className={styles.logo}>
         <h1>Doctor Sewa</h1>
       </div>
       <nav>
@@ -18,12 +18,20 @@ function Header() {
           <li>
             <a href="#">Services</a>
           </li>
+          <hr/>
           <li>
             <div class="dropdown">
-              <a href="/login" className="btn">
-                Login <i class="fa-solid fa-angle-right"></i>
+              <a href="/login" className={styles.btn}>
+              <i class="fa-regular fa-user"></i>
+                 Login
               </a>
-              
+            </div>
+          </li>
+          <li>
+          <div class="dropdown">
+              <a href="/register" className={styles.btn}>
+                SignUp<i class="fa-solid fa-angle-right"></i>
+              </a>
             </div>
           </li>
         </ul>

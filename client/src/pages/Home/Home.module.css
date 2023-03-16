@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    /* background: url('../../assets/images/stethoscope.jpg');
+    background-repeat: no-repeat;
+    background-size: cover; */
+    background: rgba(255, 10, 10, 0.452);
+    font: 16px/1.4 sans-serif;
+    letter-spacing: 0.12em;
+    min-height: 100vh;
+    padding: 2em;
+    margin: 0;
+    color: hsla(0, 0%, 0%, 0.85);
+    /* background-color: #170d24; */
+    /* background-image:
+      radial-gradient(ellipse at 10% 90%, #ffffff 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 90%, #ffffff 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 10%, #ffffff 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 10%, #ffffff 0%, transparent 55%); */
+    width: 100%;
+    max-height: fit-content;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.container h1 {
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 40px;
+
+}
+
+.container h3 {
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.slidingprofile {
+    height: fit-content;
+    width: 70vw;
+    margin-top: 50px;
+}
+
+@media only screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+        border: 1px solid black;
+    }
+
+    .slidingprofile {
+        width: 100%;
+    }
+}
+
+.imagesection img {
+    height: 295px;
+    border-radius: 30px;
+}
+
+.lowersection {
+    display: flex;
+    background: transparent;    
+    height: 200px;
+    width: 90%;
+    margin-top: 80px;
+    justify-content: space-between;
+}
+
+.likecards {    
+    width: 25%;
+    border: 1px solid black;
+}

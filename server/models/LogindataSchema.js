@@ -11,21 +11,28 @@ const loginSchema = new mongoose.Schema({
         required:true
     },
     password:{
-        type:String
-        ,required:true
+        type:String,
+        required:true
     },
     gender:{
-        type:String
-        ,required:true
+        type:String,
+        required:true
+    },
+    age:{
+        type:String,
+        required:true
+    },
+    district:{
+        type:String,
+        required:true
     },
     phone:{
         type:String,
-        unique:true
-        ,required:true
+        required:true
     },
     youare:{
-        type:String
-        ,required:true
+        type:String,
+       required:true
     }
 })
 

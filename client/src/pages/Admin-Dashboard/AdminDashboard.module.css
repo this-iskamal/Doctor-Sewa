@@ -1,0 +1,50 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.containerA{
+    background: #455d6dc4;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.headerA{
+    width: 100%;
+    height: 8%;
+}
+.headerA h3{
+    text-align: center;
+    margin: 1%;
+    color: white;
+}
+.sectionA{
+
+    width: 100%;
+    height: 92%;
+    display: flex;
+    flex-direction: row;
+}
+.leftsideA{
+    width: 18%;
+    height: 100%;
+
+}
+.mainbodyA{
+    width: 80%;
+    height: 100%;
+
+}
+.dashboardA{
+    margin: 10px;
+    margin-left: 50px;
+    padding: 8px;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    width: 70%;
+    height: 6%;
+    cursor: pointer;
+    color: white;
+}

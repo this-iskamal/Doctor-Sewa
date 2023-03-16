@@ -1,0 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.containerDA {
+    background-color: #cce49b92;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px;
+}
+.buttoncontainer button{
+    background-color: rgb(204, 204, 255);
+    position: relative;
+    left: -50px;
+    height: fit-content;
+    padding: 8px;
+}
+.buttoncontainer button:hover{
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+.doctorssections {
+    min-height: 10%;
+    height: fit-content;
+    width: 40%;
+    border: 1px solid black;
+    background: rgb(129, 226, 255);
+}
+.doctorssections h1{
+    font-size: 30px;
+    text-align: center;
+}
+
+.patientssections {
+    height: 10%;
+    height: fit-content;
+    width: 40%;
+    border: 1px solid black;
+    background: rgb(129, 226, 255);
+}
+.patientssections h1{
+    font-size: 30px;
+    text-align: center;
+}
+.doctorlist{
+    background-color: rgba(255, 255, 255, 0.739);
+    border: 1px solid black;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    display: flex;
+    justify-content: space-between;
+}
+.doctorlist h2{
+    margin-left: 10px;
+}
+.editaction{
+    padding: 5px;
+}
+.editaction button{
+    padding: 5px 5px;
+    margin: 0px 5px;
+    border-radius: 20%;
+    cursor: pointer;
+}
+.redbackground{
+    background-color: red;
+
+}
+.greenbackground{
+    background-color: rgb(27, 255, 27);
+}
