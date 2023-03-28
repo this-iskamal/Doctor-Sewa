@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+  import React, { useState , useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -71,7 +71,7 @@ function Dashboard() {
         {doctordetails.map((doctor) => {
           return (
             <div className={styles.doctorlist} key={doctor._id}>
-              <h2> {doctor.username}</h2>
+              <h2> {doctor.name}</h2>
               <div className={styles.editaction}>
                 <button className={styles.greenbackground}>
                   <i class="fa-sharp fa-solid fa-user-pen"></i>

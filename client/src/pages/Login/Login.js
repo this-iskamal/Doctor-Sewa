@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from  "./Login.module.css";
+import styles from "./Login.module.css";
 
-function Login() {
-  const [api , setApi] = useState("")
+function Login(props) {
+  const [api, setApi] = useState("");
 
   const [logindata, setLogindata] = useState({
     email: "",
     password: "",
-    youare:'',
+    youare: "",
   });
 
   const handlelogindata = (e) => {
@@ -21,7 +21,7 @@ function Login() {
       ...logindata,
       [name]: value,
     });
-    setApi(e.target.value)
+    setApi(e.target.value);
   };
 
   const navigate = useNavigate();
@@ -29,21 +29,23 @@ function Login() {
   const handleloginclick = (e) => {
     e.preventDefault();
 
-    const { email, password , youare } = logindata;
+    const { email, password, youare } = logindata;
     if (email === "") toast.warn("Enter your email");
     else if (!email.includes("@" && ".")) toast.warn("Invalid Email");
-    else if (password === "") toast.warn("Enter your password");  
+    else if (password === "") toast.warn("Enter your password");
     else if (password.length <= 5) toast.warn("Password must be of 6 length");
-   
-    else if (youare==="")toast.warn("who you are")
-    else if(api==='patient'){
+    else if (youare === "") toast.warn("who you are");
+    else if (api === "patient") {
       axios.post(`http://192.168.0.114:8078/login`, logindata).then((res) => {
         if (res.data.success === true) {
           toast.success(res.data.message);
+
+
           setTimeout(() => {
             if (res.data.role === "patient") {
-              navigate("/patient-dashboard");
+              navigate(`/patient-dashboard/${res.data.id}`);
             }
+
             if (res.data.role === "admin") {
               navigate("/admin-dashboard");
             }
@@ -52,21 +54,22 @@ function Login() {
           toast.warn(res.data.message);
         }
       });
-    }
-    else if(api==='doctor'){
-      axios.post(`http://192.168.0.114:8078/doctorlogin`,logindata).then((res)=>{
-        if(res.data.success===true){
-          toast.success(res.data.message);
-          setTimeout(() => {
-            navigate('/doctor-dashboard')
-          }, 2500);
-        }else if(res.data.success===false){
-          toast.warn(res.data.message)
-        }
-      })
+      
+    } else if (api === "doctor") {
+      axios
+        .post(`http://192.168.0.114:8078/doctorlogin`, logindata)
+        .then((res) => {
+          if (res.data.success === true) {
+            toast.success(res.data.message);
+            setTimeout(() => {
+              navigate("/doctor-dashboard");
+            }, 2500);
+          } else if (res.data.success === false) {
+            toast.warn(res.data.message);
+          }
+        });
     }
   };
-
 
   return (
     <div className={styles.container}>
@@ -79,7 +82,7 @@ function Login() {
         <div className={styles.continue}>
           <h2>Login To Continue</h2>
           <h3>
-            Not Registered Yet{" "}
+            Not Registered Yet <br />
             <span>
               <a href="/register">Register Here</a>
             </span>
@@ -101,20 +104,18 @@ function Login() {
             onChange={handlelogindata}
           />
           <div className={styles.inputfieldsR}>
-                  <select
-                    name="youare"
-                    onChange={handlelogindata}
-                    style={{width:'100%'}}
-                  >
-                    <option value="">--Select Role--</option>
-                    <option value="doctor">Doctor</option>
-                    <option value="patient">Patient</option>
-                  </select>
-                </div>
-        
-          <button  onClick={handleloginclick}>
-            Login
-          </button>
+            <select
+              name="youare"
+              onChange={handlelogindata}
+              style={{ width: "100%" }}
+            >
+              <option value="">--Select Role--</option>
+              <option value="doctor">Doctor</option>
+              <option value="patient">Patient</option>
+            </select>
+          </div>
+
+          <button onClick={handleloginclick}>Login</button>
         </div>
         <div className={styles.forget}>
           <a href="/forgot-password">Forgot your Password</a>

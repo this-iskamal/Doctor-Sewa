@@ -1,11 +1,24 @@
+import React ,{useState , useEffect} from "react";
+import { useParams , useNavigate} from "react-router-dom";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
-import styles from "./Doctors.module.css";
+import left from "../../assets/images/Bishes.jpg";
+import styles from './FindDoctors.module.css'
 
-function Doctors() {
+function FindDoctors() {
+  const [namee, setNamee] = useState("");
+  const { id } = useParams();
+  useEffect(() => {
+    axios
+      .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
+      .then((res) => {
+        setNamee(res.data.name);
+        console.log(res.data.name);
+      });
+  }, []);
+
   const [doctordetails, setDoctordetails] = useState([]);
 
   useEffect(() => {
@@ -14,57 +27,43 @@ function Doctors() {
     });
   }, []);
 
-  const handledoctorsclick = () => {
-    window.open("/admin-dashboard/doctor-list", "_self");
-  };
+  const navigate = useNavigate();
 
-  const handleavailabledoctorsclick = () => {
-    window.open("/admin-dashboard/available-doctor-list", "_self");
+  const handleprofileclick = () => {
+    navigate(`/patient-dashboard/user-profile/${id}`);
   };
-
-  const handlepatientsclick = () => {
-    window.open("/admin-dashboard/patient-list", "_self");
+  const handlefinddoctorclick = () => {
+    navigate(`/patient-dashboard/find-doctors/${id}`);
   };
-
-  const handledashboardclick = () => {
-    window.open("/admin-dashboard", "_self");
+  const handletakeappointmentclick = () => {
+    navigate(`/patient-dashboard/take-appointment/${id}`);
   };
-
-  const handleverifieddoctorsclick = () => {
-    window.open("/admin-dashboard/verify-doctor-list", "_self");
+  const handletakehelpclick = () => {
+    navigate(`/patient-dashboard/take-help/${id}`);
+  };
+  const handlebuttonclick = () => {
+    //
+    //
   };
 
   return (
-    <div className={styles.containerA}>
-      <div className={styles.headerA}>
-        <h3>Admin Portal</h3>
+    <div className={styles.container}>
+      <div className={styles.topsection}>
+        <h1>Doctor Sewa</h1>
+        <p>Hello, {namee}</p>
       </div>
-      <div className={styles.sectionA}>
-        <div className={styles.leftsideA}>
-          <div className={styles.dashboardA} onClick={handledashboardclick}>
-            Dashboard
-          </div>
-          <div className={styles.dashboardA} onClick={handledoctorsclick}>
-            Doctors
-          </div>
-          <div
-            className={styles.dashboardA}
-            onClick={handleavailabledoctorsclick}
-          >
-            Available Doctors
-          </div>
-          <div className={styles.dashboardA} onClick={handlepatientsclick}>
-            Patients
-          </div>
-          <div
-            className={styles.dashboardA}
-            onClick={handleverifieddoctorsclick}
-          >
-            Verfy Doctors
-          </div>
+      <div className={styles.navbottom}>
+        <div className={styles.leftsection}>
+          <ul>
+            <button onClick={handlebuttonclick}>click</button>
+            <li onClick={handleprofileclick}>Profile</li>
+            <li onClick={handlefinddoctorclick}>Find Doctors</li>
+            <li onClick={handletakeappointmentclick}>Take Appointment</li>
+            <li onClick={handletakehelpclick}>Take Help</li>
+          </ul>
         </div>
-        <div className={styles.mainbodyA}>
-          <div className={styles.containerDO}>
+        <div className={styles.mainsection}>
+        <div className={styles.containerDO}>
             {doctordetails.map((doctordetail) => {
               return (
                 <Card
@@ -94,11 +93,9 @@ function Doctors() {
                       Status : {doctordetail.condition}
                     </Card.Text>
                     <Button variant="primary" className={styles.buttonondoctor}>
-                      Edit
+                      Take Appointment
                     </Button>
-                    <Button variant="danger">
-                      <i class="fa-sharp fa-solid fa-trash"></i>
-                    </Button>
+                    
                   </Card.Body>
                 </Card>
               );
@@ -110,4 +107,4 @@ function Doctors() {
   );
 }
 
-export default Doctors;
+export default FindDoctors

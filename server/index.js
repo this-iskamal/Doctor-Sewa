@@ -76,12 +76,17 @@ app.post("/login", async (req, res) => {
       user.password
     );
 
-    if (!ispasswordmatch ) {
+    if (!ispasswordmatch) {
       res.status(200).send({ message: "password dont match", success: false });
     } else if (user && ispasswordmatch) {
       res
         .status(200)
-        .send({ message: "login success", success: true, role: user.youare });
+        .send({
+          message: "login success",
+          success: true,
+          role: user.youare,
+          id: user._id,
+        });
     }
   } catch (err) {
     console.log(err);
@@ -89,21 +94,22 @@ app.post("/login", async (req, res) => {
 });
 app.post("/doctorlogin", async (req, res) => {
   try {
-    const doctor = await DoctorLogindataSchema.findOne({ email: req.body.email });
+    const doctor = await DoctorLogindataSchema.findOne({
+      email: req.body.email,
+    });
     if (!doctor) {
       res.status(200).send({ message: "user not found", success: false });
+      return;
     }
     const ispasswordmatch = await bcrypt.compare(
       req.body.password,
       doctor.password
     );
 
-    if (!ispasswordmatch ) {
+    if (!ispasswordmatch) {
       res.status(200).send({ message: "password dont match", success: false });
     } else if (doctor && ispasswordmatch) {
-      res
-        .status(200)
-        .send({ message: "login success", success: true});
+      res.status(200).send({ message: "login success", success: true });
     }
   } catch (err) {
     console.log(err);
@@ -113,9 +119,13 @@ app.post("/doctorlogin", async (req, res) => {
 app.get("/admin-dashboard", async (req, res) => {
   try {
     const patientnumber = await LogindataSchema.count({ youare: "patient" });
-    const doctornumber = await LogindataSchema.count({ youare: "doctor" });
+    const doctornumber = await DoctorLogindataSchema.count({
+      condition: "Active",
+    });
     const patientdetails = await LogindataSchema.find({ youare: "patient" });
-    const doctordetails = await LogindataSchema.find({ youare: "doctor" });
+    const doctordetails = await DoctorLogindataSchema.find({
+      condition: "Active",
+    });
     if (!patientdetails && !doctordetails) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
@@ -135,7 +145,9 @@ app.get("/admin-dashboard", async (req, res) => {
 });
 app.get("/get-doctor-details", async (req, res) => {
   try {
-    const doctordetails = await LogindataSchema.find({ youare: "doctor" });
+    const doctordetails = await DoctorLogindataSchema.find({
+      condition: "Active",
+    });
     if (!doctordetails) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
@@ -148,6 +160,25 @@ app.get("/get-doctor-details", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(200).send({ message: "Internal error", success: false });
+  }
+});
+
+app.get("/patient-dashboard/:id", async (req, res) => {
+  try {
+    const patient = await LogindataSchema.findOne({ _id: req.params.id });
+
+    if (patient) {
+      const name = patient.username;  
+      const email = patient.email;
+      const age = patient.age;
+      const address = patient.district;
+      const gender = patient.gender;
+      res.status(200).send({ message: "user found", name ,email, age, address,gender  });
+    } else {
+      res.status(200).send({ message: "not found name" });
+    }
+  } catch (err) {
+    res.status(200).send({ message: "internal error", success: false });
   }
 });
 
@@ -166,6 +197,21 @@ app.delete("/admin-dashboard/:id", async (req, res) => {
   }
 });
 
+app.post("/select-doctor/:id", async (req, res) => {
+  try {
+    const usertoselect = await DoctorLogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    await DoctorLogindataSchema.updateOne(
+      { _id: req.params.id },
+      { $set: { condition: "Active" } }
+    );
+    res.status(200).send({ message: "done" });
+  } catch (err) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
 app.post(
   "/register-doctor",
   upload.fields([{ name: "profilePhoto" }, { name: "certificates" }]),
@@ -175,7 +221,7 @@ app.post(
         email: req.body.email,
       });
       if (emailcha) {
-        console.log('emial clone request')
+        console.log("emial clone request");
         res
           .status(200)
           .send({ message: "Email already exists", success: false });
@@ -183,14 +229,14 @@ app.post(
       const phonecha = await DoctorLogindataSchema.findOne({
         phone: req.body.phone,
       });
-      
+
       if (phonecha) {
-        console.log('phone clone request')
+        console.log("phone clone request");
         res
           .status(200)
           .send({ message: "Phone already exists", success: false });
-      } 
-      if(!emailcha&&!phonecha) {
+      }
+      if (!emailcha && !phonecha) {
         const formData = req.body;
         const profilePhoto = req.files.profilePhoto[0].filename;
         const certificates = req.files.certificates.map(
@@ -208,6 +254,7 @@ app.post(
           phone: formData.phone,
           speciality: formData.speciality,
           experience: formData.experience,
+          condition: formData.condition,
           profilePhoto,
           certificates,
         });
@@ -215,12 +262,11 @@ app.post(
         // Save the document to the database
 
         await newFormData.save();
+        console.log(`${req.body.name} registered success`);
         res
-        .status(200)
-        .send({ message: "Data saved successfully", success: true });
+          .status(200)
+          .send({ message: "Data saved successfully", success: true });
       }
-
-      
     } catch (error) {
       console.error(error);
       res
@@ -231,7 +277,9 @@ app.post(
 );
 app.get("/get-verified-doctors", async (req, res) => {
   try {
-    const verificationlist = await DoctorLogindataSchema.find({});
+    const verificationlist = await DoctorLogindataSchema.find({
+      condition: "Inactive",
+    });
     if (!verificationlist) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
@@ -268,6 +316,6 @@ app.get("/get-pending-doctor-profile/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT,'192.168.0.114', () => {
+app.listen(PORT, "192.168.0.114", () => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });

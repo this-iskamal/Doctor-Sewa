@@ -1,42 +1,37 @@
 const mongoose = require('mongoose')
 
-const loginSchema = new mongoose.Schema({
+const verifieddoctorSchema = new mongoose.Schema({
     name:{
-        type:String
-        ,required:true
-    },
-    email:{
         type:String,
-        unique:true,
-        required:true
+        required:true,
     },
-    password:{
+    emial:{
         type:String,
-        required:true
+        required:true,
     },
     gender:{
         type:String,
-        required:true
+        required:true,
     },
     age:{
         type:String,
-        required:true
+        required:true,
     },
     address:{
         type:String,
-        required:true
+        required:true,
     },
     phone:{
         type:String,
-        required:true
+        required:true,
     },
     speciality:{
         type:String,
-       required:true
+        required:true,
     },
     experience:{
         type:String,
-        required:true
+        required:true,
     },
     profilePhoto:{
         type:String,
@@ -48,12 +43,10 @@ const loginSchema = new mongoose.Schema({
     },
     condition:{
         type:String,
+        required:true,
     }
-},{
-    timestamps: true,
-  }
-)
+})
 
-const DoctorLogindataSchema = new mongoose.model('DoctorLogindataSchema',loginSchema)
+const VerifieddoctorSchema = new mongoose.model('VerifieddoctorSchema',verifieddoctorSchema)
 
-module.exports = DoctorLogindataSchema;
+module.exports = VerifieddoctorSchema;

@@ -62,14 +62,15 @@ li {
 }
 
 .mainsection {
-    background-color: rgb(169, 190, 242);
+    background-color: rgb(144, 170, 238);
     width: 80%;
     height: 100%;
     color: rgb(255, 255, 255);
     padding: 10px;
     display: flex;
     flex-direction: column;
-
+    justify-content: center;
+    align-items: center;
 }
 
 .diseasesection {
@@ -152,3 +153,62 @@ li {
     color: black;
     overflow-y: scroll;
 }
+
+
+.userprofile{
+    border: 1px solid black;
+    width: 98%;
+    height: 98%;
+    display: flex;
+    flex-wrap: wrap ;
+    justify-content: space-evenly;
+    flex-direction: row;
+    padding: 15px;
+}
+.userimage{
+    height: 250px;
+    border-radius: 50%;
+    width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+.photochange{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.button{
+    height: 40px;
+    width: 80%;
+    position: relative;
+    display: flex;
+    background: transparent;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: rgb(68, 54, 54);
+    border: 1px solid black;
+    margin-top: 10px;
+    background-color: aliceblue;
+}
+.userimage img{
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+}
+
+.infosection{
+    display: flex;
+    border: 1px solid black;
+    height: 500px;
+    width: 800px;
+    color: black;
+}
+.infosection ul li {
+    cursor: default;
+}
+
+

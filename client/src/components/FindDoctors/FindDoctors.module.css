@@ -152,3 +152,33 @@ li {
     color: black;
     overflow-y: scroll;
 }
+
+
+.containerDO {
+    background-color: rgba(163, 154, 249, 0.468);
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y:scroll;
+}
+
+.imageDO {
+    border-radius: 20%;
+    height: 200px;
+    width: 80%;
+    margin-top: 10px;
+    margin-left: 28px;
+}
+
+.Cardsec {
+    margin: 15px;
+    height: 400px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.buttonondoctor {
+    margin: 0px 10px;
+}

@@ -21,6 +21,7 @@ function Applyasdoctor() {
     experience: "",
     profilePhoto: null,
     certificates: null,
+    condition:"Inactive"
   });
 
   const handleInputChange = (event) => {
@@ -50,6 +51,7 @@ function Applyasdoctor() {
       experience,
       profilePhoto,
       certificates,
+      
     } = formData;
     if (name === "") toast.warn("Enter your name");
     else if (email === "") toast.warn("Enter your email");
