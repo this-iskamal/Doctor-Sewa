@@ -12,7 +12,7 @@ function Doctors() {
     axios.get("http://192.168.0.114:8078/get-doctor-details").then((res) => {
       setDoctordetails(res.data.doctordetails);
     });
-  }, []);
+  }, [doctordetails]);
 
   const handledoctorsclick = () => {
     window.open("/admin-dashboard/doctor-list", "_self");
@@ -89,7 +89,7 @@ function Doctors() {
                     <Card.Text>
                       Specialist : {doctordetail.speciality}
                       <br />
-                      Available : 10 AM - 2PM
+                      Available : {doctordetail.timing1}--{doctordetail.timing2}
                       <br />
                       Status : {doctordetail.condition}
                     </Card.Text>

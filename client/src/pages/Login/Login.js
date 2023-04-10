@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import styles from "./Login.module.css";
 
 function Login(props) {
-  const [api, setApi] = useState("");
+
 
   const [logindata, setLogindata] = useState({
     email: "",
@@ -21,31 +21,29 @@ function Login(props) {
       ...logindata,
       [name]: value,
     });
-    setApi(e.target.value);
+    
   };
 
   const navigate = useNavigate();
 
-  const handleloginclick = (e) => {
-    e.preventDefault();
+  const handleloginclick = () => {
 
+    console.log(logindata.youare);
     const { email, password, youare } = logindata;
+
     if (email === "") toast.warn("Enter your email");
     else if (!email.includes("@" && ".")) toast.warn("Invalid Email");
     else if (password === "") toast.warn("Enter your password");
     else if (password.length <= 5) toast.warn("Password must be of 6 length");
     else if (youare === "") toast.warn("who you are");
-    else if (api === "patient") {
+    else if (logindata.youare === "patient") {
       axios.post(`http://192.168.0.114:8078/login`, logindata).then((res) => {
         if (res.data.success === true) {
           toast.success(res.data.message);
-
-
           setTimeout(() => {
             if (res.data.role === "patient") {
               navigate(`/patient-dashboard/${res.data.id}`);
             }
-
             if (res.data.role === "admin") {
               navigate("/admin-dashboard");
             }
@@ -54,16 +52,15 @@ function Login(props) {
           toast.warn(res.data.message);
         }
       });
-      
-    } else if (api === "doctor") {
+    } else if (logindata.youare === "doctor") {
       axios
         .post(`http://192.168.0.114:8078/doctorlogin`, logindata)
         .then((res) => {
           if (res.data.success === true) {
             toast.success(res.data.message);
             setTimeout(() => {
-              navigate("/doctor-dashboard");
-            }, 2500);
+              navigate(`/doctor-dashboard/${res.data.id}`);
+            }, 2000);
           } else if (res.data.success === false) {
             toast.warn(res.data.message);
           }

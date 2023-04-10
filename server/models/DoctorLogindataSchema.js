@@ -42,6 +42,17 @@ const loginSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    timing1:{
+        type:String,
+
+    },
+    timing2:{
+        type:String,
+ 
+    },
+    date:{
+        type:String,
+    },
     certificates:{
         type:[String],
         required:true

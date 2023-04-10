@@ -1,11 +1,11 @@
-import React ,{useState , useEffect} from "react";
-import { useParams , useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import left from "../../assets/images/Bishes.jpg";
-import styles from './FindDoctors.module.css'
+import styles from "./FindDoctors.module.css";
 
 function FindDoctors() {
   const [namee, setNamee] = useState("");
@@ -41,9 +41,8 @@ function FindDoctors() {
   const handletakehelpclick = () => {
     navigate(`/patient-dashboard/take-help/${id}`);
   };
-  const handlebuttonclick = () => {
-    //
-    //
+  const handletakeappointment = (id1) => {
+    window.open(`/book-appointment/${id1}/${id}`, "_blank");
   };
 
   return (
@@ -55,7 +54,7 @@ function FindDoctors() {
       <div className={styles.navbottom}>
         <div className={styles.leftsection}>
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+            <button>click</button>
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Take Appointment</li>
@@ -63,7 +62,7 @@ function FindDoctors() {
           </ul>
         </div>
         <div className={styles.mainsection}>
-        <div className={styles.containerDO}>
+          <div className={styles.containerDO}>
             {doctordetails.map((doctordetail) => {
               return (
                 <Card
@@ -88,14 +87,17 @@ function FindDoctors() {
                     <Card.Text>
                       Specialist : {doctordetail.speciality}
                       <br />
-                      Available : 10 AM - 2PM
+                      Available : {doctordetail.timing1}--{doctordetail.timing2}
                       <br />
                       Status : {doctordetail.condition}
                     </Card.Text>
-                    <Button variant="primary" className={styles.buttonondoctor}>
+                    <Button
+                      variant="primary"
+                      className={styles.buttonondoctor}
+                      onClick={() => handletakeappointment(doctordetail._id)}
+                    >
                       Take Appointment
                     </Button>
-                    
                   </Card.Body>
                 </Card>
               );
@@ -107,4 +109,4 @@ function FindDoctors() {
   );
 }
 
-export default FindDoctors
+export default FindDoctors;

@@ -58,13 +58,7 @@ function Dashboard() {
     <div className={styles.containerDA}>
       <ToastContainer />
       <div className={styles.buttoncontainer}>
-        <button
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          Refresh
-        </button>
+        
       </div>
       <div className={styles.doctorssections}>
         <h1>List of Doctors : {doctornumbers}</h1>

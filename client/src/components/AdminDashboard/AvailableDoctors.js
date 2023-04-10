@@ -1,7 +1,18 @@
-import React from 'react'
-import styles from './AvailableDoctors.module.css'
+import React, { useEffect, useState } from "react";
+import styles from "./AvailableDoctors.module.css";
+import axios from "axios";
 
 function AvailableDoctors() {
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://192.168.0.114:8078/admin-appointment-info")
+      .then((res) => {
+        setAppointments(res.data.adminappointmentinfo);
+      });
+  }, []);
+
   const handledoctorsclick = () => {
     window.open("/admin-dashboard/doctor-list", "_self");
   };
@@ -51,11 +62,35 @@ function AvailableDoctors() {
           </div>
         </div>
         <div className={styles.mainbodyA}>
-          AVailable doctors Dashboard
+          <div className={styles.appointmentinfo}>
+            <h1>Appointments</h1>
+            <table>
+              <tr>
+                <th>Doctor Name</th>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+              {appointments.map((appointment) => {
+                return (
+                  <tbody>
+                    <td>{appointment.doctorName}</td>
+                    <td>{appointment.patientName}</td>
+                    <td>{appointment.date.slice(0, 10)}</td>
+                    <td>{appointment.time}</td>
+                    <td>
+                      <button>Cancel</button>
+                    </td>
+                  </tbody>
+                );
+              })}
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default AvailableDoctors
+export default AvailableDoctors;

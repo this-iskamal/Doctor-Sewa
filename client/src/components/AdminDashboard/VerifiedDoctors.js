@@ -17,7 +17,7 @@ function VerifiedDoctors() {
     axios.get("http://192.168.0.114:8078/get-verified-doctors").then((res) => {
       setVerifieddoctorlists(res.data.verificationlist);
     });
-  }, []);
+  }, [verifieddoctorlists]);
   const handlereviewclick = (id1) => {
     setId(id1);
     setShowdoctorprofilepending(!showdoctorprofilepeding);

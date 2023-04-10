@@ -69,6 +69,68 @@ li {
     padding: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
 }
+.yourtiming{
+    width: 50%;
+    height: 11%;
+    border : 1px solid black;
+    margin: 20px;
+    color: black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: aqua  ;
+    align-items: center;
+    flex-direction: column;
+}
+.yourtiming h1{
+    font-size: 25px;
+}
+.yourtiming h3{
+    font-size: 20px;
+}   
 
+.timeslot{
+
+    height: fit-content;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    /* overflow-y: scroll; */
+}
+
+#timebox{
+    border: 1px solid black;
+    margin: 2px;
+    padding: 5px;
+    width: 13%;
+    height: 50px;
+    /* background-color: aquamarine; */
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.availableslot {
+    background-color: rgb(116, 248, 116);
+  }
+  
+  .occupiedslot {
+    background-color: red;
+  }
+  
+  .pastslot {
+    background-color: rgb(153, 153, 153);
+    color: white;
+  }
+
+  .buttonclick{
+    background-color: rgb(179, 255, 0);
+  }

@@ -10,7 +10,7 @@ function DoctorProfile(props) {
       .then((res) => {
         setDoctorprofile(res.data.prendingdoctorlist);
       });
-  }, []);
+  }, [doctorprofile]);
 
   const handleviewfile = () =>{
     window.open(`http://192.168.0.114:8078/${doctorprofile.certificates[0]}`, '_blank', 'noopener');

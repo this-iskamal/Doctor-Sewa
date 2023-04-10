@@ -34,6 +34,10 @@
 .mainbodyA{
     width: 80%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
 }
 .dashboardA{
@@ -46,4 +50,38 @@
     height: 6%;
     cursor: pointer;
     color: white;
+}
+
+.appointmentinfo{
+    height: 90%;
+    width: 90%;
+    padding: 8px;
+    border: 1px solid black;
+
+
+
+    /* align-items: center; */
+    background-color: rgb(193, 193, 193);
+}
+.appointmentinfo> table >tr> th{
+    border: 1px solid black;
+    text-align: center;
+}
+tbody > td{
+    border: 1px solid black;
+    text-align: center; 
+}
+tbody > td > button{
+    margin: 2px;
+
+}
+/* .appointmentinfo> table >tr>button{
+    padding:2px;
+    margin: 2px;
+} */
+
+
+.appointmentinfo table{
+    width: 100%;
+    
 }

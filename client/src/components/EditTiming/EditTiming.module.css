@@ -69,6 +69,51 @@ li {
     padding: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 
+}
+.inputtimings{
+    width: 80%;
+    height: 10%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.inputtimings h1{
+    color: black;
+    text-align: center;
+}
+.inputtimings input{
+    width: 30%;
+    margin: 10px;
+    background-color: aqua;
+}
+.inputtimings button{
+    padding: 5px;
+    margin: 5px;
+    height: 50%;
+    background-color: aquamarine;
+}
+.yourtiming{
+    width: 50%;
+    height: 11%;
+    border : 1px solid black;
+    margin: 20px;
+    color: black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: aqua  ;
+    align-items: center;
+    flex-direction: column;
+}
+.yourtiming h1{
+    font-size: 25px;
+}
+.yourtiming h3{
+    font-size: 20px;
 }
 

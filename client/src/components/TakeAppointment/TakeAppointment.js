@@ -1,10 +1,17 @@
-import React ,{useState , useEffect} from "react";
-import { useParams , useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from './TakeAppointment.module.css'
+import styles from "./TakeAppointment.module.css";
+import moment from "moment";
+import { Modal, Button } from "react-bootstrap";
 
 function TakeAppointment() {
   const [namee, setNamee] = useState("");
+  const [input, setInput] = useState();
+  const [showalert, setShowAlert] = useState(false);
+  const [inputInvalid, setInputInvalid] = useState(false);
+
+  const [appointmentsdata, setAppointmentsdata] = useState([]);
   const { id } = useParams();
   useEffect(() => {
     axios
@@ -13,10 +20,48 @@ function TakeAppointment() {
         setNamee(res.data.name);
         console.log(res.data.name);
       });
+    axios
+      .get(`http://192.168.0.114:8078/patient-appointment-info/${id}`)
+      .then((res) => {
+        setAppointmentsdata(res.data.data);
+        console.log(res.data.message);
+      });
   }, []);
 
-  const navigate = useNavigate();
+  const handleInput = (input) => {
+    if (input.trim() === namee) {
+      console.log("done");
+      //cancel appointment garni yeha bata 
+      
 
+      //
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 800);
+    }
+    else if(input.trim() === ""){
+      setInputInvalid(true);
+      setTimeout(() => {
+      setInputInvalid(false);
+        
+      },500);
+    }
+    else{
+      setInputInvalid(true);
+      setTimeout(() => {
+      setInputInvalid(false);
+        
+      },500);
+    }
+  };
+  const showAlert = () => {
+    setShowAlert(true);
+  };
+  const handleClose = () => {
+    setShowAlert(false);
+  };
+
+  const navigate = useNavigate();
 
   const handleprofileclick = () => {
     navigate(`/patient-dashboard/user-profile/${id}`);
@@ -30,13 +75,23 @@ function TakeAppointment() {
   const handletakehelpclick = () => {
     navigate(`/patient-dashboard/take-help/${id}`);
   };
-  const handlebuttonclick = () => {
-    //
-    //
-  };
+  const handlecancelbuttonclick = () => {};
 
   return (
     <div className={styles.container}>
+      <Modal show={showalert} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter your name to cancel appointment :</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <input type="text" className={inputInvalid ? styles.shake : ''} onChange={(e) => setInput(e.target.value)} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => handleInput(input)}>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className={styles.topsection}>
         <h1>Doctor Sewa</h1>
         <p>Hello, {namee}</p>
@@ -44,17 +99,40 @@ function TakeAppointment() {
       <div className={styles.navbottom}>
         <div className={styles.leftsection}>
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+            
+
+            {/* <button onClick={handlebuttonclick}>click</button> */}
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Take Appointment</li>
             <li onClick={handletakehelpclick}>Take Help</li>
           </ul>
         </div>
-        <div className={styles.mainsection}></div>
+        <div className={styles.mainsection}>
+          <h1 style={{color:'black'}}>Your Appointments</h1>
+          {appointmentsdata.map((appointmentdata) => {
+            return (
+              <div className={styles.appointmentinfosection}>
+                You have appointment with <br />
+                <span> {appointmentdata.doctorName} </span>
+                <br />
+                {/* {appointmentdata.patientName} <br /> */}
+                on{" "}
+                {moment(appointmentdata.date)
+                  .utc()
+                  .format("dddd MMM YYYY")
+                  .toString()}{" "}
+                <br />
+                at {appointmentdata.time}
+                <br />
+                <Button onClick={showAlert} variant="danger">Cancel</Button>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-export default TakeAppointment
+export default TakeAppointment;

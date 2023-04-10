@@ -13,8 +13,13 @@ import AvailableDoctors from "./components/AdminDashboard/AvailableDoctors";
 import Doctors from "./components/AdminDashboard/Doctors";
 import UserProfile from "./components/UserProfile/UserProfile";
 import TakeHelp from './components/TakeHelp/TakeHelp'
+import ViewAppointments from './components/ViewAppointments/ViewAppointments'
+import EditTiming from './components/EditTiming/EditTiming'
+import DoctorTakeHelp from './components/DoctorTakeHelp/DoctorTakeHelp'
+import DoctorUserProfile from './components/DoctorUserProfile/DoctorUserProfile'
 import FindDoctors from './components/FindDoctors/FindDoctors'
 import TakeAppointment from './components/TakeAppointment/TakeAppointment'
+import BookAppointment from "./components/BookAppointment/BookAppointment";
 
 // import Dashboard from "./components/AdminDashboard/Dashboard";
 // import AvailableDoctors from "./components/AdminDashboard/AvailableDoctors";
@@ -39,7 +44,7 @@ function App() {
       element: <Register />,
     },
     {
-      path: "/doctor-dashboard",
+      path: "/doctor-dashboard/:id",
       element: <DoctorDashboard />,
     },
     {
@@ -72,6 +77,22 @@ function App() {
       element:<UserProfile/>
     },
     {
+      path:'/doctor-dashboard/doctor-user-profile/:id',
+      element:<DoctorUserProfile/>
+    },
+    {
+      path:'/doctor-dashboard/view-appointments/:id',
+      element:  <ViewAppointments/>
+    },
+    {
+      path:'/doctor-dashboard/edit-timing/:id',
+      element:<EditTiming/>
+    },
+    {
+      path:'/doctor-dashboard/doctor-take-help/:id',
+      element:<DoctorTakeHelp/>
+    },
+    {
       path:'/patient-dashboard/find-doctors/:id',
       element:<FindDoctors/>
     },
@@ -82,6 +103,10 @@ function App() {
     {
       path:'/patient-dashboard/take-help/:id',
       element:<TakeHelp/>
+    },
+    {
+      path:'/book-appointment/:id1/:id',
+      element:<BookAppointment/>
     },
     {
       path: "/admin-dashboard",
