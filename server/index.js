@@ -60,8 +60,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: "doctorsewa770@gmail.com", // generated ethereal user
-    pass: "klblvnquommmnfpv", // generated ethereal password
+    user: process.env.EMAIL, // generated ethereal user
+    pass: process.env.PASS, // generated ethereal password
   },
 });
 
@@ -654,8 +654,8 @@ app.post("/send-otp/:id", async (req, res) => {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "doctorsewa770@gmail.com", // generated ethereal user
-        pass: "klblvnquommmnfpv", // generated ethereal password
+        user: process.env.EMAIL, // generated ethereal user
+        pass: process.env.PASS, // generated ethereal password
       },
     });
     const mailOptions = {
