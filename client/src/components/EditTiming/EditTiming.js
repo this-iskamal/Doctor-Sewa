@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import baseurl from '../../assets/baseurl'
+
 import "react-toastify/dist/ReactToastify.css";
 // import DateTimePicker from "react-datetime-picker";
 import styles from "./EditTiming.module.css";
@@ -15,7 +17,7 @@ function PatientDashboard() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/doctor-dashboard/${id}`)
+      .get(`${baseurl}/doctor-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         sett1(res.data.timing1);
@@ -46,7 +48,7 @@ function PatientDashboard() {
     else{
 
     axios
-      .post(`http://192.168.0.114:8078/doctor-dashboard/timing/${id}`, time)
+      .post(`${baseurl}/doctor-dashboard/timing/${id}`, time)
       .then((res) => {
         toast.success("Timing updated successfully")
         setTimeout(() => {

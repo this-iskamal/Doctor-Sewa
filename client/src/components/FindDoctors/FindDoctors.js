@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import left from "../../assets/images/Bishes.jpg";
 import styles from "./FindDoctors.module.css";
+import baseurl from '../../assets/baseurl'
+
 import specialities from "../../assets/data/specialities.json";
 
 function FindDoctors() {
@@ -18,7 +20,7 @@ function FindDoctors() {
   const [query, setQuery] = useState("");
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         console.log(res.data.name);
@@ -27,7 +29,7 @@ function FindDoctors() {
 
   // useEffect(()=>{
   //   const fetchResults = async ()=>{
-  //     axios.get(`http://192.168.0.114:8078/find-doctors?q=${query}`)
+  //     axios.get(`${baseurl}/find-doctors?q=${query}`)
   //     .then((res)=>{
   //       setResults(res.data.doctors);
   //     })
@@ -46,7 +48,7 @@ function FindDoctors() {
       if (!query) {
         try {
           const response = await axios.get(
-            `http://192.168.0.114:8078/find-doctors`
+            `${baseurl}/find-doctors`
           );
           setResults(response.data.doctors);
         } catch (err) {
@@ -56,7 +58,7 @@ function FindDoctors() {
       }
       try {
         const response = await axios.get(
-          `http://192.168.0.114:8078/find-doctors?q=${query}`
+          `${baseurl}/find-doctors?q=${query}`
         );
         setResults(response.data.doctors);
       } catch (err) {
@@ -67,7 +69,7 @@ function FindDoctors() {
   }, [query]);
 
   useEffect(() => {
-    axios.get("http://192.168.0.114:8078/get-doctor-details").then((res) => {
+    axios.get("${baseurl}/get-doctor-details").then((res) => {
       setDoctordetails(res.data.doctordetails);
     });
   }, []);
@@ -136,7 +138,7 @@ function FindDoctors() {
                 >
                   <Card.Img
                     variant="top"
-                    src={`http://192.168.0.114:8078/${doctordetail.profilePhoto}`}
+                    src={`${baseurl}/${doctordetail.profilePhoto}`}
                     className={styles.imageDO}
                   />
                   <Card.Body>

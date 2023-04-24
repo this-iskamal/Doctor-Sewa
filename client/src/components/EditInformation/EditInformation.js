@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import baseurl from '../../assets/baseurl'
+
 import styles from "./EditInformation.module.css";
 import { useParams } from "react-router-dom";
 import district from "../../assets/data/district.json";
@@ -20,7 +22,7 @@ const EditInformation = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/patient-edit-information/${id}`)
+      .get(`${baseurl}/patient-edit-information/${id}`)
       .then((res) => {
         setUser(res.data.patientInfo);
       });
@@ -40,7 +42,7 @@ const EditInformation = () => {
     if (username === "") toast.warn("Enter your name");
     else {
       axios
-        .post(`http://192.168.0.114:8078/patient-update-information/${id}`, {
+        .post(`${baseurl}/patient-update-information/${id}`, {
           username,
         })
         .then((res) => {
@@ -59,7 +61,7 @@ const EditInformation = () => {
     else if (!email.includes("@" && ".")) toast.warn("Invalid Email");
     else {
       axios
-        .post(`http://192.168.0.114:8078/patient-update-information/${id}`, {
+        .post(`${baseurl}/patient-update-information/${id}`, {
           email,
         })
         .then((res) => {
@@ -76,7 +78,7 @@ const EditInformation = () => {
     if (address === "") toast.warn("Select your district");
     else {
       axios
-        .post(`http://192.168.0.114:8078/patient-update-information/${id}`, {
+        .post(`${baseurl}/patient-update-information/${id}`, {
           address,
         })
         .then((res) => {
@@ -93,7 +95,7 @@ const EditInformation = () => {
     if (gender === "") toast.warn("Select your gender");
     else {
       axios
-        .post(`http://192.168.0.114:8078/patient-update-information/${id}`, {
+        .post(`${baseurl}/patient-update-information/${id}`, {
           gender,
         })
         .then((res) => {
@@ -112,7 +114,7 @@ const EditInformation = () => {
     else if (+age > 120) toast.warn("Enter your valid age");
     else {
       axios
-        .post(`http://192.168.0.114:8078/patient-update-information/${id}`, {
+        .post(`${baseurl}/patient-update-information/${id}`, {
           age,
         })
         .then((res) => {
@@ -139,7 +141,7 @@ const EditInformation = () => {
     else {
       axios
         .post(
-          `http://192.168.0.114:8078/patient-update-information/${id}`,
+          `${baseurl}/patient-update-information/${id}`,
           newdata
         )
         .then((res) => {
@@ -150,7 +152,7 @@ const EditInformation = () => {
 
   const handlesendotp = (e) => {
     e.preventDefault();
-    axios.post(`http://192.168.0.114:8078/send-otp/${id}`).then((res) => {
+    axios.post(`${baseurl}/send-otp/${id}`).then((res) => {
       toast.success(res.data.message);
     });
   };
@@ -158,7 +160,7 @@ const EditInformation = () => {
     const { password } = newdata;
     e.preventDefault();
     axios
-      .post(`http://192.168.0.114:8078/otp-confirm/${id}`, { password })
+      .post(`${baseurl}/otp-confirm/${id}`, { password })
       .then((res) => {
         if (res.data.success) {
           toast.success(res.data.message);

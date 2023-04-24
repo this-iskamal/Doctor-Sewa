@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./Symptoms.module.css";
+import baseurl from '../../assets/baseurl'
+
 import diseasedata from "../../assets/data/disease-symptoms.json";
 
 function Symptoms(props) {

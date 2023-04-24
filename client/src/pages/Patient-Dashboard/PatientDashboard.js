@@ -4,12 +4,14 @@ import Symptoms from "../../components/Symptoms/Symptoms";
 import styles from "./PatientDashboard.module.css";
 import diseasedata from "../../assets/data/disease-symptoms.json";
 import axios from "axios";
+import baseurl from '../../assets/baseurl'
+
 
 function PatientDashboard() {
   const [namee , setNamee ] = useState('')
   const {id} = useParams();
   useEffect(()=>{
-    axios.get(`http://192.168.0.114:8078/patient-dashboard/${id}`).then((res)=>{
+    axios.get(`${baseurl}/patient-dashboard/${id}`).then((res)=>{
       setNamee(res.data.name)
       console.log(res.data.name)
     })

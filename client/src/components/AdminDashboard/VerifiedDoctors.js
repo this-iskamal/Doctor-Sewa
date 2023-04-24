@@ -3,6 +3,8 @@ import axios from "axios";
 import styles from "./VerifiedDoctors.module.css";
 import DoctorProfile from "../DoctorProfile/DoctorProfile";
 import { useNavigate } from "react-router-dom";
+import baseurl from '../../assets/baseurl'
+
 //import DoctorProfile from "../DoctorProfile/DoctorProfile";
 // import App from "../../App";
 
@@ -14,7 +16,7 @@ function VerifiedDoctors() {
   const [verifieddoctorlists, setVerifieddoctorlists] = useState([]);
 
   useEffect(() => {
-    axios.get("http://192.168.0.114:8078/get-verified-doctors").then((res) => {
+    axios.get(`${baseurl}/get-verified-doctors`).then((res) => {
       setVerifieddoctorlists(res.data.verificationlist);
     });
   }, [verifieddoctorlists]);

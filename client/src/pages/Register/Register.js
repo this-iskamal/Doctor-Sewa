@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import baseurl from '../../assets/baseurl'
+
 import styles from "./Register.module.css";
 import district from "../../assets/data/district.json";
 import Applyasdoctor from "../../components/Applyasdoctor/Applyasdoctor";
@@ -69,7 +71,7 @@ function Register() {
 
     else {
       axios
-        .post("http://192.168.0.114:8078/register", userdata)
+        .post(`${baseurl}/register`, userdata)
         .then((res) => {
           if (res.data.success === true) {
             toast.success(res.data.message);

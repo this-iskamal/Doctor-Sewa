@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./DoctorUserProfile.module.css";
 import testimage from "../../assets/images/left.jpg";
+import baseurl from '../../assets/baseurl'
+
 
 function UserProfile() {
   const [namee, setNamee] = useState("");
@@ -15,7 +17,7 @@ function UserProfile() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/doctor-dashboard/${id}`)
+      .get(`${baseurl}/doctor-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         setEmail(res.data.email)
@@ -66,7 +68,7 @@ function UserProfile() {
           <div className={styles.userprofile}>
             <div className={styles.photochange}>
               <div className={styles.userimage}>
-                <img src={`http://192.168.0.114:8078/${photo}`} alt="" />
+                <img src={`${baseurl}/${photo}`} alt="" />
               </div>
               <div className={styles.button}>Change Image</div>
             </div>

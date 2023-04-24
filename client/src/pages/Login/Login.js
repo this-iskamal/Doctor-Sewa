@@ -5,6 +5,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "./Login.module.css";
+import baseurl from '../../assets/baseurl'
+
 
 function Login(props) {
 
@@ -37,7 +39,7 @@ function Login(props) {
     else if (password.length <= 5) toast.warn("Password must be of 6 length");
     else if (youare === "") toast.warn("who you are");
     else if (logindata.youare === "patient") {
-      axios.post(`http://192.168.0.114:8078/login`, logindata).then((res) => {
+      axios.post(`${baseurl}/login`, logindata).then((res) => {
         if (res.data.success === true) {
           toast.success(res.data.message);
           setTimeout(() => {
@@ -54,7 +56,7 @@ function Login(props) {
       });
     } else if (logindata.youare === "doctor") {
       axios
-        .post(`http://192.168.0.114:8078/doctorlogin`, logindata)
+        .post(`${baseurl}/doctorlogin`, logindata)
         .then((res) => {
           if (res.data.success === true) {
             toast.success(res.data.message);

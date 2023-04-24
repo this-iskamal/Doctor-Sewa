@@ -2,13 +2,15 @@ import React ,{useState , useEffect} from "react";
 import { useParams , useNavigate} from "react-router-dom";
 import axios from "axios";
 import styles from './TakeHelp.module.css'
+import baseurl from '../../assets/baseurl'
+
 
 function TakeHelp() {
   const [namee, setNamee] = useState("");
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         console.log(res.data.name);

@@ -7,6 +7,8 @@ import image4 from "../../assets/images/4.png.png";
 import image5 from "../../assets/images/5.png.png";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import baseurl from '../../assets/baseurl'
+
 import Header from "../../components/Header/Header";
 
 function Home() {

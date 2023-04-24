@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "./AvailableDoctors.module.css";
 import axios from "axios";
+import baseurl from '../../assets/baseurl'
 
 function AvailableDoctors() {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://192.168.0.114:8078/admin-appointment-info")
+      .get(`${baseurl}/admin-appointment-info`)
       .then((res) => {
         setAppointments(res.data.adminappointmentinfo);
       });

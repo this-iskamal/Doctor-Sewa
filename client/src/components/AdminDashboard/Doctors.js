@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
+import baseurl from '../../assets/baseurl'
+
 import styles from "./Doctors.module.css";
 
 function Doctors() {
   const [doctordetails, setDoctordetails] = useState([]);
 
   useEffect(() => {
-    axios.get("http://192.168.0.114:8078/get-doctor-details").then((res) => {
+    axios.get(`${baseurl}/get-doctor-details`).then((res) => {
       setDoctordetails(res.data.doctordetails);
     });
   }, [doctordetails]);
@@ -81,7 +83,7 @@ function Doctors() {
                 >
                   <Card.Img
                     variant="top"
-                    src={`http://192.168.0.114:8078/${doctordetail.profilePhoto}`}
+                    src={`${baseurl}/${doctordetail.profilePhoto}`}
                     className={styles.imageDO}
                   />
                   <Card.Body>

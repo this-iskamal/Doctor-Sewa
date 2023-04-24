@@ -1,5 +1,7 @@
 import React from 'react'
 import styles from './Patients.module.css'
+import baseurl from '../../assets/baseurl'
+
 
 function Patients() {
   const handledoctorsclick = () => {

@@ -3,6 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
+import baseurl from '../../assets/baseurl'
+
 
 function Dashboard() {
   
@@ -13,7 +15,7 @@ function Dashboard() {
 
 
   useEffect(() => {
-    axios.get(`http://192.168.0.114:8078/admin-dashboard`).then((res) => {
+    axios.get(`${baseurl}/admin-dashboard`).then((res) => {
       setDoctordetails(res.data.doctordetails);
       setPatientnumbers(res.data.patientnumber)
       setDoctornumbers(res.data.doctornumber)
@@ -21,7 +23,7 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://192.168.0.114:8078/admin-dashboard`).then((res) => {
+    axios.get(`${baseurl}/admin-dashboard`).then((res) => {
       setPatientdetails(res.data.patientdetails);
     });
   },[]);
@@ -29,7 +31,7 @@ function Dashboard() {
   const deleteuser = async (id) => {
     try {
       axios
-        .delete(`http://192.168.0.114:8078/admin-dashboard/${id}`)
+        .delete(`${baseurl}/admin-dashboard/${id}`)
         .then((res) => {
           if (res.data.success) {
             toast.success(res.data.message);

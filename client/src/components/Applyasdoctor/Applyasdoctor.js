@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import specialities from '../../assets/data/specialities.json'
+import baseurl from '../../assets/baseurl'
+
 
 
 function Applyasdoctor() {
@@ -77,7 +79,7 @@ function Applyasdoctor() {
         formDataToSend.append(key, formData[key]);
       }
       axios
-        .post("http://192.168.0.114:8078/register-doctor", formDataToSend, {
+        .post(`${baseurl}/register-doctor`, formDataToSend, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

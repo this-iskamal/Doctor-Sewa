@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./UserProfile.module.css";
 import testimage from "../../assets/images/left.jpg";
+import baseurl from '../../assets/baseurl'
+
 
 function UserProfile() {
   const [namee, setNamee] = useState("");
@@ -13,7 +15,7 @@ function UserProfile() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         setEmail(res.data.email)

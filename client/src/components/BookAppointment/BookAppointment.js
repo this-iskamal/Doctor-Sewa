@@ -4,6 +4,8 @@ import styles from "./BookAppointment.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import baseurl from '../../assets/baseurl'
+
 import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
 
@@ -21,7 +23,7 @@ function BookAppointment() {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/doctor-dashboard/${id1}`)
+      .get(`${baseurl}/doctor-dashboard/${id1}`)
       .then((res) => {
         setNamee(res.data.name);
 
@@ -32,7 +34,7 @@ function BookAppointment() {
 
   const handleviewslotsclick = () => {
     axios
-      .get(`http://192.168.0.114:8078/appointment-info/${id1}/${date}`)
+      .get(`${baseurl}/appointment-info/${id1}/${date}`)
       .then((res) => {
         setSlots(res.data.appointments);
       });
@@ -48,7 +50,7 @@ function BookAppointment() {
       console.log(time)
     
       axios
-      .post(`http://192.168.0.114:8078/book-now/${id1}/${id}`, { time, date })
+      .post(`${baseurl}/book-now/${id1}/${id}`, { time, date })
       .then((res) => {
         if(res.data.success===true){
           toast.success(res.data.message);

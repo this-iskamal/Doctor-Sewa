@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styles from "./ChangePassword.module.css";
 import { ToastContainer, toast } from "react-toastify";
+import baseurl from '../../assets/baseurl'
+
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -29,7 +31,7 @@ function ChangePassword() {
     else if (cpassword === "") toast.warn("Enter confirm password");
     else if (password !== cpassword) toast.warn("Password don't match");
     else {
-      axios.post(`http://192.168.0.114:8078/change-password/${id}`,{password})
+      axios.post(`${baseurl}/change-password/${id}`,{password})
       .then((res)=>{
         if(res.data.success){
             toast.success(res.data.message)

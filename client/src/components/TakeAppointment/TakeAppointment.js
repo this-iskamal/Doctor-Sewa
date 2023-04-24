@@ -4,6 +4,8 @@ import axios from "axios";
 import styles from "./TakeAppointment.module.css";
 import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
+import baseurl from '../../assets/baseurl'
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,13 +20,13 @@ function TakeAppointment() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         // console.log(res.data.name);
       });
     axios
-      .get(`http://192.168.0.114:8078/patient-appointment-info/${id}`)
+      .get(`${baseurl}/patient-appointment-info/${id}`)
       .then((res) => {
         setAppointmentsdata(res.data.data);
         // console.log(res.data.message);
@@ -37,7 +39,7 @@ function TakeAppointment() {
       console.log(namee)
       //cancel appointment garni yeha bata
       axios
-        .post(`http://192.168.0.114:8078/patient-cancel-appointment/${appid}`)
+        .post(`${baseurl}/patient-cancel-appointment/${appid}`)
         .then((res) => {
           console.log(res.data.message);
           toast.success(res.data.message)

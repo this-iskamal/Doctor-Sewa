@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import baseurl from '../../assets/baseurl'
+
 import styles from "./DoctorProfile.module.css";
 
 function DoctorProfile(props) {
   const [doctorprofile, setDoctorprofile] = useState([]);
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/get-pending-doctor-profile/${props.id}`)
+      .get(`${baseurl}/get-pending-doctor-profile/${props.id}`)
       .then((res) => {
         setDoctorprofile(res.data.prendingdoctorlist);
       });
   }, [doctorprofile]);
 
   const handleviewfile = () =>{
-    window.open(`http://192.168.0.114:8078/${doctorprofile.certificates[0]}`, '_blank', 'noopener');
+    window.open(`${baseurl}/${doctorprofile.certificates[0]}`, '_blank', 'noopener');
   }
 
   const handleselectclick = () =>{
-    axios.post(`http://192.168.0.114:8078/select-doctor/${props.id}`)
+    axios.post(`${baseurl}/select-doctor/${props.id}`)
     .then((res)=>{
       window.location.reload();
     })
@@ -25,7 +27,7 @@ function DoctorProfile(props) {
   }
 
   const handlerejectclick = () =>{
-    axios.delete(`http://192.168.0.114:8078/delete-doctor/${props.id}`)
+    axios.delete(`${baseurl}/delete-doctor/${props.id}`)
     .then((res)=>{})
   }
   return (
@@ -41,7 +43,7 @@ function DoctorProfile(props) {
           <div className={styles.cardbordertop}></div>
           <div className={styles.img}>
             <img
-              src={`http://192.168.0.114:8078/${doctorprofile.profilePhoto}`}
+              src={`${baseurl}/${doctorprofile.profilePhoto}`}
               alt="bishes"
             />
           </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import baseurl from '../../assets/baseurl'
 
 import styles from "./ViewAppointments.module.css";
 
@@ -16,7 +17,7 @@ function PatientDashboard() {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.0.114:8078/doctor-dashboard/${id}`)
+      .get(`${baseurl}/doctor-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
         sett1(res.data.timing1);
@@ -24,7 +25,7 @@ function PatientDashboard() {
         setdate(res.data.date);
       });
     // axios
-    //   .get(`http://192.168.0.114:8078/appointment-info/${id}/${date}`)
+    //   .get(`${baseurl}/appointment-info/${id}/${date}`)
     //   .then((res) => {
     //     setSlots(res.data.appointments);
     //     console.log(date);
@@ -32,7 +33,7 @@ function PatientDashboard() {
   }, [namee, t1, t2, date]);
   const handlerefreshbuttonclick = () =>{
     axios
-      .get(`http://192.168.0.114:8078/appointment-info/${id}/${date}`)
+      .get(`${baseurl}/appointment-info/${id}/${date}`)
       .then((res) => {
         setSlots(res.data.appointments);
         console.log(date)
@@ -40,7 +41,7 @@ function PatientDashboard() {
   }
   // useEffect(() => {
   //   axios
-  //     .post(`http://192.168.0.114:8078/appointment-info/${id}`,{namee,date})
+  //     .post(`${baseurl}/appointment-info/${id}`,{namee,date})
   //     .then((res) => {
   //       setSlots(res.data.appointments);
   //     });
