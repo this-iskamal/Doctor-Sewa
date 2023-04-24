@@ -69,7 +69,7 @@ function FindDoctors() {
   }, [query]);
 
   useEffect(() => {
-    axios.get("${baseurl}/get-doctor-details").then((res) => {
+    axios.get(`${baseurl}/get-doctor-details`).then((res) => {
       setDoctordetails(res.data.doctordetails);
     });
   }, []);

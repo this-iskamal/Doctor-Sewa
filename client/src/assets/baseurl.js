@@ -1,3 +1,3 @@
- const baseurl= "http://192.168.0.114:8078"
+ const baseurl= "https://doctor-sewa.onrender.com"
 
 module.exports = baseurl
