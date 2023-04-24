@@ -26,7 +26,7 @@ const EditInformation = () => {
       .then((res) => {
         setUser(res.data.patientInfo);
       });
-  }, []);
+  }, [id]);
 
   const handleedit = (e) => {
     const { name, value } = e.target;
@@ -126,29 +126,29 @@ const EditInformation = () => {
     }
   };
 
-  const handleupdateclick = (e) => {
-    e.preventDefault();
-    console.log(newdata);
-    const { username, email, address, gender, age } = newdata;
-    if (username === "") toast.warn("Enter your name");
-    else if (email === "") toast.warn("Enter your email");
-    else if (!email.includes("@" && ".")) toast.warn("Invalid Email");
-    else if (address === "") toast.warn("Select your district");
-    else if (gender === "") toast.warn("Select your gender");
-    else if (age === "") toast.warn("Enter your age");
-    else if (+age === 0) toast.warn("Enter your valid age");
-    else if (+age > 120) toast.warn("Enter your valid age");
-    else {
-      axios
-        .post(
-          `${baseurl}/patient-update-information/${id}`,
-          newdata
-        )
-        .then((res) => {
-          console.log(res.data.message);
-        });
-    }
-  };
+  // const handleupdateclick = (e) => {
+  //   e.preventDefault();
+  //   console.log(newdata);
+  //   const { username, email, address, gender, age } = newdata;
+  //   if (username === "") toast.warn("Enter your name");
+  //   else if (email === "") toast.warn("Enter your email");
+  //   else if (!email.includes("@" && ".")) toast.warn("Invalid Email");
+  //   else if (address === "") toast.warn("Select your district");
+  //   else if (gender === "") toast.warn("Select your gender");
+  //   else if (age === "") toast.warn("Enter your age");
+  //   else if (+age === 0) toast.warn("Enter your valid age");
+  //   else if (+age > 120) toast.warn("Enter your valid age");
+  //   else {
+  //     axios
+  //       .post(
+  //         `${baseurl}/patient-update-information/${id}`,
+  //         newdata
+  //       )
+  //       .then((res) => {
+  //         console.log(res.data.message);
+  //       });
+  //   }
+  // };
 
   const handlesendotp = (e) => {
     e.preventDefault();

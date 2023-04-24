@@ -24,7 +24,7 @@ function PatientDashboard() {
         sett2(res.data.timing2);
         setdate(res.data.date);
       });
-  }, []);
+  }, [id]);
 
   const [time, setTime] = useState({
     timing1: "",

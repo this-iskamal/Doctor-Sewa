@@ -15,7 +15,7 @@ function TakeHelp() {
         setNamee(res.data.name);
         console.log(res.data.name);
       });
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate();
 

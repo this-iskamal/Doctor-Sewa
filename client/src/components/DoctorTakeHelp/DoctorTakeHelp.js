@@ -1,6 +1,6 @@
 import React from 'react'
-import styles from './DoctorTakeHelp.module.css'
-import baseurl from '../../assets/baseurl'
+// import styles from './DoctorTakeHelp.module.css'
+// import baseurl from '../../assets/baseurl'
 
 
 function DoctorTakeHelp() {

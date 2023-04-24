@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./VerifiedDoctors.module.css";
 import DoctorProfile from "../DoctorProfile/DoctorProfile";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import baseurl from '../../assets/baseurl'
 
 //import DoctorProfile from "../DoctorProfile/DoctorProfile";
 // import App from "../../App";
 
 function VerifiedDoctors() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [id, setId] = useState(null);
   const [showdoctorprofilepeding, setShowdoctorprofilepending] =
     useState(false);

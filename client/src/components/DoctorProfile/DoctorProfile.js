@@ -12,7 +12,7 @@ function DoctorProfile(props) {
       .then((res) => {
         setDoctorprofile(res.data.prendingdoctorlist);
       });
-  }, [doctorprofile]);
+  }, [doctorprofile , props.id]);
 
   const handleviewfile = () =>{
     window.open(`${baseurl}/${doctorprofile.certificates[0]}`, '_blank', 'noopener');

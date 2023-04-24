@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams} from "react-router-dom";
-import Symptoms from "../../components/Symptoms/Symptoms";
+// import Symptoms from "../../components/Symptoms/Symptoms";
 import styles from "./DoctorDashboard.module.css";
-import diseasedata from "../../assets/data/disease-symptoms.json";
+// import diseasedata from "../../assets/data/disease-symptoms.json";
 import axios from "axios";
 import baseurl from '../../assets/baseurl'
 
@@ -15,7 +15,7 @@ function PatientDashboard() {
       setNamee(res.data.name)
       console.log(res.data.name)
     })
-  },[])
+  },[id])
 
 
 

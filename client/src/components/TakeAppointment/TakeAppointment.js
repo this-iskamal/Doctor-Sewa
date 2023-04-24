@@ -31,7 +31,7 @@ function TakeAppointment() {
         setAppointmentsdata(res.data.data);
         // console.log(res.data.message);
       });
-  }, []);
+  }, [id]);
 
   const handleInput = (input) => {
     
@@ -87,7 +87,7 @@ function TakeAppointment() {
   const handletakehelpclick = () => {
     navigate(`/patient-dashboard/take-help/${id}`);
   };
-  const handlecancelbuttonclick = () => {};
+  // const handlecancelbuttonclick = () => {};
 
   return (
     <div className={styles.container}>

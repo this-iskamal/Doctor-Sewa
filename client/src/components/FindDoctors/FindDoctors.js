@@ -4,17 +4,17 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
-import left from "../../assets/images/Bishes.jpg";
+// import left from "../../assets/images/Bishes.jpg";
 import styles from "./FindDoctors.module.css";
 import baseurl from '../../assets/baseurl'
 
-import specialities from "../../assets/data/specialities.json";
+// import specialities from "../../assets/data/specialities.json";
 
 function FindDoctors() {
   const [namee, setNamee] = useState("");
   const [results, setResults] = useState([]);
   const { id } = useParams();
-  const [doctordetails, setDoctordetails] = useState([]);
+  // const [doctordetails, setDoctordetails] = useState([]);
 
   
   const [query, setQuery] = useState("");
@@ -25,7 +25,7 @@ function FindDoctors() {
         setNamee(res.data.name);
         console.log(res.data.name);
       });
-  }, []);
+  }, [id]);
 
   // useEffect(()=>{
   //   const fetchResults = async ()=>{
@@ -68,11 +68,11 @@ function FindDoctors() {
     fetchResults();
   }, [query]);
 
-  useEffect(() => {
-    axios.get(`${baseurl}/get-doctor-details`).then((res) => {
-      setDoctordetails(res.data.doctordetails);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`${baseurl}/get-doctor-details`).then((res) => {
+  //     setDoctordetails(res.data.doctordetails);
+  //   });
+  // }, []);
 
   const navigate = useNavigate();
 

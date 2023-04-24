@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./DoctorUserProfile.module.css";
-import testimage from "../../assets/images/left.jpg";
+// import testimage from "../../assets/images/left.jpg";
 import baseurl from '../../assets/baseurl'
 
 
@@ -27,7 +27,7 @@ function UserProfile() {
         setPhoto(res.data.photo)
         setSpeciality(res.data.speciality)
       });
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate();
 

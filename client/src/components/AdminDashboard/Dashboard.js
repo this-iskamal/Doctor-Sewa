@@ -47,14 +47,14 @@ function Dashboard() {
       console.log(err);
     }
   };
-  const updateuser = async (id)=>{
-    try{
-      console.log('wait')
-    }
-    catch(err){
-      console.log(err)
-    }
-  }
+  // const updateuser = async (id)=>{
+  //   try{
+  //     console.log('wait')
+  //   }
+  //   catch(err){
+  //     console.log(err)
+  //   }
+  // }
 
   return (
     <div className={styles.containerDA}>

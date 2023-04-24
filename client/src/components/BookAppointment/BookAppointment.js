@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import styles from "./BookAppointment.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import baseurl from '../../assets/baseurl'
 
-import moment from "moment";
+// import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
 
 function BookAppointment() {
@@ -30,7 +30,7 @@ function BookAppointment() {
         setdate(res.data.date);
       });
 
-  }, [namee, date]);
+  }, [namee, date , id1]);
 
   const handleviewslotsclick = () => {
     axios

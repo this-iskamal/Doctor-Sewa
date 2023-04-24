@@ -23,7 +23,7 @@ function UserProfile() {
         setAddress(res.data.address)
         setAge(res.data.age)
       });
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Header.module.css";
-import baseurl from '../../assets/baseurl'
+// import baseurl from '../../assets/baseurl'
 
 
 function Header() {
@@ -11,15 +11,7 @@ function Header() {
       </div>
       <nav>
         <ul>
-          <li>
-            <a href="#">Home</a>
-          </li>
-          <li>
-            <a href="#">Doctors</a>
-          </li>
-          <li>
-            <a href="#">Services</a>
-          </li>
+          
           <hr/>
           <li>
             <div class="dropdown">

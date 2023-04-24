@@ -30,7 +30,7 @@ function PatientDashboard() {
     //     setSlots(res.data.appointments);
     //     console.log(date);
     //   });
-  }, [namee, t1, t2, date]);
+  }, [namee, t1, t2, date,id]);
   const handlerefreshbuttonclick = () =>{
     axios
       .get(`${baseurl}/appointment-info/${id}/${date}`)

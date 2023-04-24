@@ -15,7 +15,7 @@ function PatientDashboard() {
       setNamee(res.data.name)
       console.log(res.data.name)
     })
-  },[])
+  },[id])
 
 
 
