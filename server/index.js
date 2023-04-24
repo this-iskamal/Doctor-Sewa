@@ -870,6 +870,6 @@ app.get("/get-pending-doctor-profile/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, "192.168.0.114", () => {
+app.listen(PORT, () => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });
