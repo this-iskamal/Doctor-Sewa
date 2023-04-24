@@ -8,6 +8,8 @@ const appointmentSchema = new mongoose.Schema({
   status: { type: String, default: "available" },
   patientName: { type: String, default: "" },
   doctorName: { type: String, required:true },
+  patientEmail: { type: String, default:"" },
+
 
 });
 

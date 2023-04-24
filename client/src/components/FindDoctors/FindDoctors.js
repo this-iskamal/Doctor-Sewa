@@ -6,10 +6,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
 import left from "../../assets/images/Bishes.jpg";
 import styles from "./FindDoctors.module.css";
+import specialities from "../../assets/data/specialities.json";
 
 function FindDoctors() {
   const [namee, setNamee] = useState("");
+  const [results, setResults] = useState([]);
   const { id } = useParams();
+  const [doctordetails, setDoctordetails] = useState([]);
+
+  
+  const [query, setQuery] = useState("");
   useEffect(() => {
     axios
       .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
@@ -19,7 +25,46 @@ function FindDoctors() {
       });
   }, []);
 
-  const [doctordetails, setDoctordetails] = useState([]);
+  // useEffect(()=>{
+  //   const fetchResults = async ()=>{
+  //     axios.get(`http://192.168.0.114:8078/find-doctors?q=${query}`)
+  //     .then((res)=>{
+  //       setResults(res.data.doctors);
+  //     })
+  //   }
+  //   if (query) {
+  //     fetchResults();
+  //   } else {
+  //     setResults([]);
+  //   }
+  // },[query])
+
+
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!query) {
+        try {
+          const response = await axios.get(
+            `http://192.168.0.114:8078/find-doctors`
+          );
+          setResults(response.data.doctors);
+        } catch (err) {
+          console.error(err);
+        }
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `http://192.168.0.114:8078/find-doctors?q=${query}`
+        );
+        setResults(response.data.doctors);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchResults();
+  }, [query]);
 
   useEffect(() => {
     axios.get("http://192.168.0.114:8078/get-doctor-details").then((res) => {
@@ -44,6 +89,10 @@ function FindDoctors() {
   const handletakeappointment = (id1) => {
     window.open(`/book-appointment/${id1}/${id}`, "_blank");
   };
+  const handlesearchoperation = (event) => {
+    setQuery(event.target.value);
+
+  };
 
   return (
     <div className={styles.container}>
@@ -63,13 +112,21 @@ function FindDoctors() {
         </div>
         <div className={styles.mainsection}>
           <div className={styles.containerDO}>
-            {doctordetails.map((doctordetail) => {
+            <input
+              className={styles.searchinput}
+              type="search"
+              placeholder="Search By Speciality"
+              value={query.trim()}
+              onChange={handlesearchoperation}
+            />
+
+            {results?.map((doctordetail) => {
               return (
                 <Card
                   className={styles.Cardsec}
                   key={doctordetail.id}
                   style={{
-                    width: "17rem",
+                    width: "18rem",
                     borderRadius: "30px",
                     display: "flex",
                     backgroundColor: "darkblue",
@@ -83,9 +140,19 @@ function FindDoctors() {
                     className={styles.imageDO}
                   />
                   <Card.Body>
-                    <Card.Title>{doctordetail.name}</Card.Title>
+                    <Card.Title>
+                      <div
+                        className={
+                          doctordetail.date ? styles.active : styles.notactive
+                        }
+                      ></div>
+                      {doctordetail.name}
+                    </Card.Title>
                     <Card.Text>
                       Specialist : {doctordetail.speciality}
+                      <br />
+                      Date :{" "}
+                      {doctordetail.date ? doctordetail.date : "Not available"}
                       <br />
                       Available : {doctordetail.timing1}--{doctordetail.timing2}
                       <br />

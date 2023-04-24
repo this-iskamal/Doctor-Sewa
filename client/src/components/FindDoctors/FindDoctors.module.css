@@ -165,9 +165,13 @@ li {
     overflow-y:scroll;
 }
 
+.searchinput{
+    height: 50px;
+}
+
 .imageDO {
     border-radius: 20%;
-    height: 200px;
+    height: 180px;
     width: 80%;
     margin-top: 10px;
     margin-left: 28px;
@@ -175,10 +179,25 @@ li {
 
 .Cardsec {
     margin: 15px;
-    height: 400px;
+    height: 450px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .buttonondoctor {
     margin: 0px 10px;
+}
+
+.active{
+
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: greenyellow;
+}
+.notactive{
+
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: red;
 }

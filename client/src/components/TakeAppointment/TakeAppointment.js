@@ -4,9 +4,12 @@ import axios from "axios";
 import styles from "./TakeAppointment.module.css";
 import moment from "moment";
 import { Modal, Button } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function TakeAppointment() {
   const [namee, setNamee] = useState("");
+  const [appid, setAppid] = useState("");
   const [input, setInput] = useState();
   const [showalert, setShowAlert] = useState(false);
   const [inputInvalid, setInputInvalid] = useState(false);
@@ -18,43 +21,50 @@ function TakeAppointment() {
       .get(`http://192.168.0.114:8078/patient-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
-        console.log(res.data.name);
+        // console.log(res.data.name);
       });
     axios
       .get(`http://192.168.0.114:8078/patient-appointment-info/${id}`)
       .then((res) => {
         setAppointmentsdata(res.data.data);
-        console.log(res.data.message);
+        // console.log(res.data.message);
       });
   }, []);
 
   const handleInput = (input) => {
+    
     if (input.trim() === namee) {
-      console.log("done");
-      //cancel appointment garni yeha bata 
-      
+      console.log(namee)
+      //cancel appointment garni yeha bata
+      axios
+        .post(`http://192.168.0.114:8078/patient-cancel-appointment/${appid}`)
+        .then((res) => {
+          console.log(res.data.message);
+          toast.success(res.data.message)
+        });
+
+
 
       //
       setTimeout(() => {
         setShowAlert(false);
+        window.location.reload();
       }, 800);
-    }
-    else if(input.trim() === ""){
+    } else if (input.trim() === "") {
       setInputInvalid(true);
       setTimeout(() => {
-      setInputInvalid(false);
-        
-      },500);
-    }
-    else{
+        setInputInvalid(false);
+      }, 500);
+    } 
+    else {
       setInputInvalid(true);
       setTimeout(() => {
-      setInputInvalid(false);
-        
-      },500);
+        setInputInvalid(false);
+      }, 500);
     }
   };
-  const showAlert = () => {
+  const showAlert = (iid) => {
+    setAppid(iid);
     setShowAlert(true);
   };
   const handleClose = () => {
@@ -84,7 +94,11 @@ function TakeAppointment() {
           <Modal.Title>Enter your name to cancel appointment :</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input type="text" className={inputInvalid ? styles.shake : ''} onChange={(e) => setInput(e.target.value)} />
+          <input
+            type="text"
+            className={inputInvalid ? styles.shake : ""}
+            onChange={(e) => setInput(e.target.value)}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={() => handleInput(input)}>
@@ -92,6 +106,7 @@ function TakeAppointment() {
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
       <div className={styles.topsection}>
         <h1>Doctor Sewa</h1>
         <p>Hello, {namee}</p>
@@ -99,8 +114,6 @@ function TakeAppointment() {
       <div className={styles.navbottom}>
         <div className={styles.leftsection}>
           <ul>
-            
-
             {/* <button onClick={handlebuttonclick}>click</button> */}
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
@@ -109,8 +122,8 @@ function TakeAppointment() {
           </ul>
         </div>
         <div className={styles.mainsection}>
-          <h1 style={{color:'black'}}>Your Appointments</h1>
-          {appointmentsdata.map((appointmentdata) => {
+          <h1 style={{ color: "black" }}>Your Appointments</h1>
+          {appointmentsdata?.map((appointmentdata) => {
             return (
               <div className={styles.appointmentinfosection}>
                 You have appointment with <br />
@@ -120,12 +133,17 @@ function TakeAppointment() {
                 on{" "}
                 {moment(appointmentdata.date)
                   .utc()
-                  .format("dddd MMM YYYY")
+                  .format("dddd ,  DD MMM YYYY")
                   .toString()}{" "}
                 <br />
                 at {appointmentdata.time}
                 <br />
-                <Button onClick={showAlert} variant="danger">Cancel</Button>
+                <Button
+                  onClick={() => showAlert(appointmentdata._id)}
+                  variant="danger"
+                >
+                  Cancel
+                </Button>
               </div>
             );
           })}

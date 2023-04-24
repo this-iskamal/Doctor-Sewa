@@ -91,7 +91,7 @@ function PatientDashboard() {
             <button className={styles.buttonclick} onClick={handlerefreshbuttonclick}>View Slots</button>
           </div>
           <div className={styles.timeslot}>
-            {slots.map((slot) => {
+            {slots?.map((slot) => {
               const now = new Date();
               const slotDate = new Date(slot.date);
               const isPast = slotDate < now;
@@ -103,7 +103,7 @@ function PatientDashboard() {
                 : styles.occupiedslot;
               return (
                 <div key={slot._id} className={classname} id={styles.timebox}>
-                  {slot.time}
+                  {slot.time }
                 </div>
               );
             })}

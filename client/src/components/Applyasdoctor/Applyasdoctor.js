@@ -4,6 +4,7 @@ import styles from "./Applyasdoctor.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import specialities from '../../assets/data/specialities.json'
 
 
 function Applyasdoctor() {
@@ -207,12 +208,28 @@ function Applyasdoctor() {
           <div className={styles.fields}>
             <label>
               Speciality:
-              <input
+              {/* <input
                 type="text"
                 name="speciality"
                 value={formData.speciality}
                 onChange={handleInputChange}
-              />
+              /> */}
+              <select
+                name="speciality"
+                value={formData.speciality}
+                onChange={handleInputChange}
+              >
+                <option value="">Select Speciality</option>
+                {
+                  specialities.map((speciality)=>{
+                    return(
+                      <option value={speciality.toUpperCase()}>
+                      {speciality.toUpperCase()}
+                      </option>
+                    )
+                  })
+                }
+              </select>
             </label>
           </div>
           <div className={styles.fields}>

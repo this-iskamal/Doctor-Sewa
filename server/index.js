@@ -5,12 +5,16 @@ const http = require("http");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
+const nodemailer = require("nodemailer");
+const cron = require("node-cron");
+
 require("dotenv").config();
 require("./db/conn");
 const LogindataSchema = require("./models/LogindataSchema");
 const DoctorLogindataSchema = require("./models/DoctorLogindataSchema");
 const Appointment = require("./models/Appointment");
 const moment = require("moment-timezone");
+const smtpTransport = require("nodemailer-smtp-transport");
 
 const saltrounds = 10;
 const PORT = process.env.PORT || 8000;
@@ -30,6 +34,124 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+
+// const mailgun = require("mailgun-js");
+// const DOMAIN = 'sandbox5a2c92b456c742f1a7ac564619bc459a.mailgun.org';
+// const mg = mailgun({apiKey: '6c7436c7abdc135e5a5888eea066f85c-2cc48b29-3912228d', domain: DOMAIN});
+// const data = {
+// 	from: 'Excited User <me@samples.mailgun.org>',
+// 	to: 'kamaldp.gautam@gmail.com',
+// 	subject: 'Hello',
+// 	text: 'Testing some Mailgun awesomness!'
+// };
+// mg.messages().send(data, function (error, body) {
+// 	console.log(body);
+// });
+
+// async..await is not allowed in global scope, must use a wrapper
+// async function main() {
+// Generate test SMTP service account from ethereal.email
+// Only needed if you don't have a real mail account for testing
+// let testAccount = await nodemailer.createTestAccount();
+
+// create reusable transporter object using the default SMTP transport
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "doctorsewa770@gmail.com", // generated ethereal user
+    pass: "klblvnquommmnfpv", // generated ethereal password
+  },
+});
+
+// send mail with defined transport object
+// let info = await transporter.sendMail({
+//   from: ' Doctor Sewa <doctorsewa770@gmail.com>', // sender address
+//   to: "kamal.gautam.36808@gmail.com", // list of receivers
+//   subject: "Hello ✔", // Subject line
+//   text: "Hello world?", // plain text body
+//   html: "<b>Hello world?</b>", // html body
+// });
+
+// console.log("Message sent");
+// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+// Preview only available when sending through an Ethereal account
+// console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+// }
+
+// main().catch(console.error);
+
+//reminders pathauni thau
+// const current = new Date();
+// console.log(current)
+
+//*****yehe bata reminder pathauni aaile comment gareko xa*****//
+cron.schedule("0 0 * * *", async () => {
+  const currentTime = new Date();
+  console.log("done");
+  const appointm = await Appointment.find({
+    patientid: { $exists: true, $ne: "" },
+    date: {
+      $gt: currentTime,
+      $lt: new Date(currentTime.getTime() + 24 * 60 * 60 * 1000),
+    },
+  });
+  const appointmenttodelete = await Appointment.find({
+    date: { $lt: currentTime },
+  });
+  if (appointmenttodelete) {
+    await Appointment.deleteMany({
+      date: { $lt: currentTime },
+    });
+  }
+
+  appointm.forEach((appoint) => {
+    const mailOptions = {
+      from: "doctorsewa770@gmail.com",
+      to: appoint.patientEmail,
+      subject: "Reminder: Your appointment is coming up soon!",
+      html: `
+        <body>
+          <h1>Appointment Reminder</h1>
+          <p>Dear ${appoint.patientName},</p>
+          <p>This is a  reminder that you have an upcoming appointment with <b>${appoint.doctorName} on </b> <span style='color:red'><b>  ${appoint.date} at ${appoint.time}</b></span>.</p>
+          <p>Please make sure to arrive on time and bring any necessary documents or information with you.</p>
+          <p>If you need to reschedule or cancel your appointment, please do so as soon as possible by contacting us at +9779846944680 </p>
+          <p>Thank you for choosing our service for your healthcare needs.</p>
+          <p>Sincerely,</p>
+          <p>Doctor Sewa Team</p>
+        </body>
+      `,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending reminder email:", error);
+      } else {
+        console.log(`Reminder email sent to ${appoint.patientName}`);
+      }
+    });
+  });
+});
+
+app.post("/change-password/:id", async (req, res) => {
+  try {
+    const patient = await LogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    if (patient) {
+      hashnewpwd = await bcrypt.hash(req.body.password, saltrounds);
+      query = { _id: req.params.id };
+      update = { $set: { password: hashnewpwd } };
+      await LogindataSchema.findOneAndUpdate(query,update,{returnOriginal:false})
+      res.status(200).send({message:"password change successfull", success:true})
+    }
+  } catch (error) {
+    res.status(200).send({ message: "Internal error", success: false });
+  }
+});
 
 app.post("/register", async (req, res) => {
   try {
@@ -210,6 +332,7 @@ app.get("/doctor-dashboard/:id", async (req, res) => {
       const timing1 = patient.timing1;
       const timing2 = patient.timing2;
       const date = patient.date;
+      const speciality = patient.speciality;
 
       res.status(200).send({
         message: "user found",
@@ -222,11 +345,137 @@ app.get("/doctor-dashboard/:id", async (req, res) => {
         age,
         address,
         gender,
+        speciality,
       });
     } else {
       res.status(200).send({ message: "not found name" });
     }
   } catch (err) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.post("/patient-cancel-appointment/:appid", async (req, res) => {
+  try {
+    const query = {
+      _id: req.params.appid,
+    };
+    const update = {
+      $set: {
+        status: "available",
+        patientName: "",
+        patientid: "",
+        patientEmail: "",
+      },
+    };
+    await Appointment.findOneAndUpdate(query, update, {
+      returnOriginal: false,
+    });
+    console.log("done");
+    res.status(200).send({
+      message: `Appointment canceled`,
+      success: true,
+    });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.get("/find-doctors", async (req, res) => {
+  const query = req.query.q;
+  let doctors;
+  try {
+    if (!query) {
+      doctors = await DoctorLogindataSchema.find({ condition: "Active" });
+    } else {
+      doctors = await DoctorLogindataSchema.find({
+        speciality: {
+          $regex: query,
+          $options: "i",
+        },
+        condition: "Active",
+      });
+    }
+
+    res.status(200).send({ message: "searching", doctors });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.get("/patient-edit-information/:id", async (req, res) => {
+  try {
+    const patientInfo = await LogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    if (patientInfo) {
+      res.status(200).send({ message: "found info", patientInfo });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.post("/patient-update-information/:id", async (req, res) => {
+  try {
+    const query = {
+      _id: req.params.id,
+    };
+    const updateUsername = {
+      $set: {
+        username: req.body.username,
+      },
+    };
+    const updateEmail = {
+      $set: {
+        email: req.body.email,
+      },
+    };
+    const updateAddress = {
+      $set: {
+        district: req.body.address,
+      },
+    };
+    const updateGender = {
+      $set: {
+        gender: req.body.gender,
+      },
+    };
+    const updateAge = {
+      $set: {
+        age: req.body.age,
+      },
+    };
+
+    if (req.body.username) {
+      await LogindataSchema.findOneAndUpdate(query, updateUsername, {
+        returnOriginal: false,
+      });
+      console.log("name change");
+    } else if (req.body.email) {
+      await LogindataSchema.findOneAndUpdate(query, updateEmail, {
+        returnOriginal: false,
+      });
+      console.log("change email");
+    } else if (req.body.address) {
+      await LogindataSchema.findOneAndUpdate(query, updateAddress, {
+        returnOriginal: false,
+      });
+      console.log("address change");
+    } else if (req.body.gender) {
+      await LogindataSchema.findOneAndUpdate(query, updateGender, {
+        returnOriginal: false,
+      });
+      console.log("gender change");
+    } else if (req.body.age) {
+      await LogindataSchema.findOneAndUpdate(query, updateAge, {
+        returnOriginal: false,
+      });
+      console.log("age change");
+    }
+
+    res.status(200).send({ message: "update successfull", success: true });
+  } catch (error) {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
@@ -319,28 +568,56 @@ app.post("/doctor-dashboard/timing/:id", async (req, res) => {
 
 app.post("/book-now/:id1/:id", async (req, res) => {
   try {
-    const doctor = await DoctorLogindataSchema.findOne({ _id: req.params.id1 });
-    const date1 = req.body.date + "T00:00:00.000+00:00";
-    const patient = await LogindataSchema.findOne({ _id: req.params.id });
-    if (patient) {
-      const query = {
-        doctorid: req.params.id1,
-        time: req.body.t1,
-        date: date1,
-      };
-      const update = {
-        $set: {
-          status: "unavailable",
-          patientName: patient.username,
-          patientid: patient._id,
-        },
-      };
-      await Appointment.findOneAndUpdate(query, update, {
-        returnOriginal: false,
-      });
+    const appcount = await Appointment.count({
+      patientid: req.params.id,
+      date: req.body.date,
+    });
+    if (appcount === 1) {
       res.status(200).send({
-        message: `Booking succes to doctor ${doctor.name} for date ${req.body.date} at ${req.body.t1}`,
+        message: `You can only book one appointment `,
+        success: false,
       });
+    }
+    if (appcount === 0) {
+      const doctor = await DoctorLogindataSchema.findOne({
+        _id: req.params.id1,
+      });
+      const date1 = req.body.date + "T00:00:00.000+00:00";
+      const try1 = await Appointment.findOne({
+        doctorid: req.params.id1,
+        time: req.body.time,
+        date: date1,
+        status: "unavailable",
+      });
+      const patient = await LogindataSchema.findOne({ _id: req.params.id });
+      if (!try1) {
+        console.log("hello");
+        const query = {
+          doctorid: req.params.id1,
+          time: req.body.time,
+          date: date1,
+        };
+        const update = {
+          $set: {
+            status: "unavailable",
+            patientName: patient.username,
+            patientid: patient._id,
+            patientEmail: patient.email,
+          },
+        };
+        await Appointment.findOneAndUpdate(query, update, {
+          returnOriginal: false,
+        });
+        res.status(200).send({
+          message: `Booking succes to doctor ${doctor.name} for date ${req.body.date} at ${req.body.time}`,
+          success: true,
+        });
+      } else {
+        res.status(200).send({
+          message: `Appointment already booked!`,
+          success: false,
+        });
+      }
     }
   } catch (error) {
     res
@@ -358,6 +635,87 @@ app.get("/admin-appointment-info", async (req, res) => {
       res
         .status(200)
         .send({ message: "done", adminappointmentinfo, success: true });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.post("/send-otp/:id", async (req, res) => {
+  try {
+    const min = 100000;
+    const max = 999999;
+    const otp = Math.floor(Math.random() * (max - min + 1) + min);
+    const patient = await LogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: "doctorsewa770@gmail.com", // generated ethereal user
+        pass: "klblvnquommmnfpv", // generated ethereal password
+      },
+    });
+    const mailOptions = {
+      from: "doctorsewa770@gmail.com",
+      to: patient.email,
+      subject: "Change Password OTP",
+      html: `
+        <body>
+          <h1>Password Change Request for OTP</h1>
+          <p>Dear ${patient.username},</p>
+         
+          <br>
+          <p>Your OTP is <br> <b><h1>${otp}</h1></b>
+          <br>
+
+          <p>Please do not share your OTP with others </p>
+
+          <p>Sincerely,</p>
+          <p>Doctor Sewa Team</p>
+        </body>
+      `,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending OTP:", error);
+      } else {
+        console.log(`OTP sent to ${patient.username}`);
+      }
+    });
+
+    const query = { _id: req.params.id };
+    const update = { $set: { otp: otp } };
+    await LogindataSchema.findOneAndUpdate(query, update, {
+      returnOriginal: false,
+    });
+    res
+      .status(200)
+      .send({ message: "OTP sent successfully to your email", success: true });
+    setTimeout(async () => {
+      const query1 = { _id: req.params.id };
+      const update1 = { $set: { otp: "" } };
+      await LogindataSchema.findOneAndUpdate(query1, update1, {
+        returnOriginal: false,
+      });
+      console.log("otp destroyed");
+    }, 300000);
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.post("/otp-confirm/:id", async (req, res) => {
+  try {
+    const patient = await LogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    if (patient.otp === req.body.password) {
+      res.status(200).send({ message: "OTP confirmed", success: true });
+    } else {
+      res.status(200).send({ message: "Invalid OTP", success: false });
     }
   } catch (error) {
     res.status(200).send({ message: "internal error", success: false });

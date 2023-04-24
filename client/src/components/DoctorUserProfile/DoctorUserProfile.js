@@ -11,6 +11,7 @@ function UserProfile() {
   const [gender,setGender]=useState('')
   const [address,setAddress]=useState('')
   const [photo,setPhoto]=useState('')
+  const [speciality , setSpeciality] = useState("")
   const { id } = useParams();
   useEffect(() => {
     axios
@@ -22,6 +23,7 @@ function UserProfile() {
         setAddress(res.data.address)
         setAge(res.data.age)
         setPhoto(res.data.photo)
+        setSpeciality(res.data.speciality)
       });
   }, []);
 
@@ -73,6 +75,7 @@ function UserProfile() {
                 <li>Name : {namee}</li>
                 <li>Email : {email}</li>
                 <li>Age : {age}</li>
+                <li>Speciality : {speciality}</li>
                 <li>Gender : {gender}</li>
                 <li>Address : {address}</li>
                 <li><button>Edit Information</button></li>

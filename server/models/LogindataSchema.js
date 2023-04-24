@@ -33,6 +33,10 @@ const loginSchema = new mongoose.Schema({
     youare:{
         type:String,
        required:true
+    },
+    otp:{
+        type:String,
+        default:"",
     }
 })
 

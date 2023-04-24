@@ -20,6 +20,8 @@ import DoctorUserProfile from './components/DoctorUserProfile/DoctorUserProfile'
 import FindDoctors from './components/FindDoctors/FindDoctors'
 import TakeAppointment from './components/TakeAppointment/TakeAppointment'
 import BookAppointment from "./components/BookAppointment/BookAppointment";
+import EditInformation from "./components/EditInformation/EditInformation";
+import ChangePassword from "./components/ChangePassword/ChangePassword";
 
 // import Dashboard from "./components/AdminDashboard/Dashboard";
 // import AvailableDoctors from "./components/AdminDashboard/AvailableDoctors";
@@ -50,6 +52,16 @@ function App() {
     {
       path: "/patient-dashboard/:id",
       element: <PatientDashboard />,
+    },
+    ,
+    {
+      path: "/edit-information/:id",
+      element: <EditInformation/>,
+    },
+    ,
+    {
+      path: "/change-password/:id",
+      element: <ChangePassword/>,
     },
     // {
     //   path: `/doctor-profile`,

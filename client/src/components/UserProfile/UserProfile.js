@@ -42,6 +42,10 @@ function UserProfile() {
     //
   };
 
+  const handleeditbuttonclick = () =>{
+      window.open(`/edit-information/${id}`,"_blank")
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.topsection}>
@@ -73,7 +77,7 @@ function UserProfile() {
                 <li>Age : {age}</li>
                 <li>Gender : {gender}</li>
                 <li>Address : {address}</li>
-                <li><button>Edit Information</button></li>
+                <li><button onClick={handleeditbuttonclick}>Edit Information</button></li>
               </ul>
             </div>
           </div>
