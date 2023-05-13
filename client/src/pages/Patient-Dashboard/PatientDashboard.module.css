@@ -75,7 +75,7 @@ li {
 .diseasesection {
     height: 100%;
     width: 80%;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     display: flex;
     flex-wrap: wrap;
     overflow-y: scroll;
@@ -97,13 +97,13 @@ li {
     margin: 5px;
     width: 30%;
     height: 15%;
-    background-color: rgb(49, 88, 186);
+    background-color: rgba(0, 0, 139, 0.678);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    box-shadow: 0px 0px 8px 6px rgba(0, 0, 0, 0.15) inset;
-    border: 1px solid rgba(0, 0, 0, 0.13);
+    /* box-shadow: 0px 0px 8px 6px rgba(0, 0, 0, 0.15) inset; */
+    /* border: 1px solid rgba(0, 0, 0, 0.13); */
     border-radius: 5px;
     cursor: pointer;
 }
@@ -146,9 +146,132 @@ li {
 }
 
 .symptomssection {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     height: 100%;
     width: 40%;
     color: black;
     overflow-y: scroll;
+}
+
+
+
+/* this is test */
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topsection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.navbottom {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.leftsection {
+    background-color: #4CAF50;
+
+  width: 200px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.leftsection ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.leftsection li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.leftsection li:hover {
+  background-color: #86d559;
+}
+
+.mainsection {
+  flex: 1;
+  padding: 20px;
+}
+
+.typedisease {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.typedisease:hover {
+      background-color: #4CAF50;
+
+}
+
+.symptomssection {
+  margin-top: 20px;
+}
+
+.menuButton {
+  display:none;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .leftsection {
+    display: none;
+  }
+  .mainsection {
+    flex: 1;
+    
+  }
+  .typedisease{
+    width: 100%;
+  }
+  .diseasesection{
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+  }
+  .symptomssection{
+    width: 70%;
+  }
+  
+  .leftsection {
+    display: none;
+    flex-direction: column;
+    padding: 0;  
+  
+  }
+  .leftsection > li{
+    padding: 0px;
+    
+  }
+  .showMenu {
+    display: flex;
+    width: 35%;
+  }
+  .menuButton {
+    display: block;
+    position: absolute;
+    top: 11%;
+    left: 5%;
+    border: none;
+    background: none;
+  }
+  
 }

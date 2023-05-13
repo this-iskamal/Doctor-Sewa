@@ -4,6 +4,8 @@ import axios from "axios";
 import styles from "./DoctorUserProfile.module.css";
 // import testimage from "../../assets/images/left.jpg";
 import baseurl from '../../assets/baseurl'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function UserProfile() {
@@ -15,6 +17,9 @@ function UserProfile() {
   const [photo,setPhoto]=useState('')
   const [speciality , setSpeciality] = useState("")
   const { id } = useParams();
+  const [showMenu, setShowMenu] = useState(false);
+  const [profile,setProfile]=useState(null)
+
   useEffect(() => {
     axios
       .get(`${baseurl}/doctor-dashboard/${id}`)
@@ -45,19 +50,64 @@ function UserProfile() {
   };
   const handlebuttonclick = () => {
     //
+    navigate(`/doctor-dashboard/${id}`);
+
     //
   };
+  const handleeditbuttonclick = () => {
+    window.open(`/doctor-edit-information/${id}`, "_blank");
+  };
+  const handleFileChange = (event) => {
+    setProfile(event.target.files[0])
+  };
+  const handleupdateprofileclick = () =>{
+    if (profile === null) toast.warn("Upload your photo");
+    else{
+      const formData = new FormData();
+      formData.append('profile', profile);
+      
+      axios
+        .post(`${baseurl}/doctor-profile-change/${id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if(res.data.success===true){
+            toast.success(res.data.message);
+            setTimeout(() => {
+              window.location.reload();
+            }, 2500);
+          }
+          if(res.data.success===false){
+            toast.warn(res.data.message);
+          }
+        });
+    }
+  }
 
   return (
     <div className={styles.container}>
+      <ToastContainer />
+
       <div className={styles.topsection}>
         <h1>Doctor Sewa</h1>
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+          <li onClick={handlebuttonclick}>Home</li>
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handleviewappointmentclick}>View Appointments</li>
             <li onClick={handleedittimingclick}>Edit Timing</li>
@@ -70,7 +120,13 @@ function UserProfile() {
               <div className={styles.userimage}>
                 <img src={`${baseurl}/${photo}`} alt="" />
               </div>
-              <div className={styles.button}>Change Image</div>
+              <div className={styles.button}><input
+                type="file"
+                name="profilePhoto"
+                accept="image/*"
+                onChange={handleFileChange}
+              /></div>
+              <div className={styles.button}><button style={{padding:'3px' , backgroundColor:"lightblue"}} onClick={handleupdateprofileclick}>Update Profile</button></div>
             </div>
             <div className={styles.infosection}>
               <ul>
@@ -80,7 +136,7 @@ function UserProfile() {
                 <li>Speciality : {speciality}</li>
                 <li>Gender : {gender}</li>
                 <li>Address : {address}</li>
-                <li><button>Edit Information</button></li>
+                <li><button onClick={handleeditbuttonclick}>Edit Information</button></li>
               </ul>
             </div>
           </div>

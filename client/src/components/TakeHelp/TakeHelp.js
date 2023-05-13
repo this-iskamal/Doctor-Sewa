@@ -8,6 +8,8 @@ import baseurl from '../../assets/baseurl'
 function TakeHelp() {
   const [namee, setNamee] = useState("");
   const { id } = useParams();
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     axios
       .get(`${baseurl}/patient-dashboard/${id}`)
@@ -34,6 +36,7 @@ function TakeHelp() {
   };
   const handlebuttonclick = () => {
     //
+    navigate(`/patient-dashboard/${id}`);
     //
   };
 
@@ -44,12 +47,23 @@ function TakeHelp() {
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+          <li onClick={handlebuttonclick}>Home</li>
+
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
-            <li onClick={handletakeappointmentclick}>Take Appointment</li>
+            <li onClick={handletakeappointmentclick}>Appointments</li>
             <li onClick={handletakehelpclick}>Take Help</li>
           </ul>
         </div>

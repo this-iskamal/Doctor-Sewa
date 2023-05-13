@@ -79,13 +79,13 @@ function Login(props) {
           <h1>Welcome</h1>
         </div>
         <div className={styles.continue}>
-          <h2>Login To Continue</h2>
-          <h3>
-            Not Registered Yet <br />
+          
+          <h5>
+            Not Registered Yet 
             <span>
-              <a href="/register">Register Here</a>
+              <a href="/register"> Register Here</a>
             </span>
-          </h3>
+          </h5>
         </div>
         <div className={styles.form}>
           <input
@@ -122,9 +122,9 @@ function Login(props) {
         <div className={styles.copyright}>
           <p>
             <i class="fa-sharp fa-solid fa-copyright"></i> 2023 Doctor Sewa All
-            Right Reserved <br />
-            By signing up, I agree to Doctor Sewa <br />
-            <a href="/terms-of-services">Terms of Services</a>
+            Right Reserved  <br />
+           By signing up, I agree to Doctor Sewa <br />
+            
           </p>
         </div>
       </div>

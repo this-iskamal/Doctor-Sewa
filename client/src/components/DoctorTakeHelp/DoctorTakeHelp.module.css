@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.726);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.topsection {
+    height: 10%;
+    align-items: center;
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.navbottom {
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+    width: 100%;
+}
+
+.topsection p {
+    font-size: 22px;
+}
+
+.topsection h1 {
+    font-size: 40px;
+    font-family: poppins;
+}
+
+.leftsection {
+    width: 20%;
+    height: 100%;
+    background-color: rgba(0, 0, 139, 0.678);
+    display: flex;
+    color: white;
+}
+
+li {
+    margin: 20px;
+    margin-bottom: 25px;
+    list-style: none;
+    text-decoration: none;
+    font-size: large;
+    cursor: pointer;
+}
+
+.mainsection h2 {
+    font-size: 25px;
+    color: black;
+    text-align: center;
+}
+
+.mainsection {
+    background-color: rgb(169, 190, 242);
+    width: 80%;
+    height: 100%;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.diseasesection {
+    height: 100%;
+    width: 80%;
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    scroll-behavior: smooth;
+}
+
+.diseasesymptoms {
+    height: 95%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.typedisease {
+    text-align: center;
+    margin: 5px;
+    width: 30%;
+    height: 15%;
+    background-color: rgb(49, 88, 186);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0px 0px 8px 6px rgba(0, 0, 0, 0.15) inset;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.typedisease h1 {
+    font-size: 14px;
+}
+
+.diseasesection::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 0px;
+    background-color: #ffffff;
+}
+
+.diseasesection::-webkit-scrollbar {
+    width: 4px;
+    background-color: #ffffff;
+}
+
+.diseasesection::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #6149e9;
+}
+.symptomssection::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 0px;
+    background-color: #ffffff;
+}
+
+.symptomssection::-webkit-scrollbar {
+    width: 4px;
+    background-color: #ffffff;
+}
+
+.symptomssection::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #6149e9;
+}
+
+.symptomssection {
+    border: 1px solid black;
+    height: 100%;
+    width: 40%;
+    color: black;
+    overflow-y: scroll;
+}
+
+
+
+/* this is test */
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .topsection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .navbottom {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .leftsection {
+      background-color: #4CAF50;
+  
+    width: 200px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .leftsection ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .leftsection li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .leftsection li:hover {
+    background-color: #86d559;
+  }
+  
+  .mainsection {
+    flex: 1;
+    padding: 20px;
+  }
+  
+
+  .menuButton {
+    display:none;
+  }
+  /* this is second test*/
+
+
+
+  /*second test end here*/
+
+
+
+  
+@media screen and (max-width: 768px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+    .leftsection {
+      display: none;
+    }
+    .mainsection {
+      flex: 1;
+    }
+    
+    .leftsection {
+      display: none;
+      flex-direction: column;
+      padding: 0;  
+    
+    }
+    .leftsection > li{
+      padding: 0px;
+      
+    }
+    .showMenu {
+      display: flex;
+      width: 35%;
+    }
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 11%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+    
+  }
+  

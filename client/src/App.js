@@ -22,6 +22,10 @@ import TakeAppointment from "./components/TakeAppointment/TakeAppointment";
 import BookAppointment from "./components/BookAppointment/BookAppointment";
 import EditInformation from "./components/EditInformation/EditInformation";
 import ChangePassword from "./components/ChangePassword/ChangePassword";
+import DoctorEditInformation from "./components/DoctorEditInformation/DoctorEditInformation";
+import EditDoctorInfo from "./components/EditDoctorInfo/EditDoctorInfo";
+import EditPatientInfo from "./components/EditPatientInfo/EditPatientInfo";
+import VerifyAppointments from "./components/AdminDashboard/VerifyAppointments";
 
 // import Dashboard from "./components/AdminDashboard/Dashboard";
 // import AvailableDoctors from "./components/AdminDashboard/AvailableDoctors";
@@ -54,6 +58,22 @@ function App() {
       {
         path: "/edit-information/:id",
         element: <EditInformation />,
+      },
+      {
+        path: "/admin-dashboard/verify-appointments",
+        element: <VerifyAppointments />,
+      },
+      {
+        path: "/doctor-edit-information/:id",
+        element: <DoctorEditInformation />,
+      },
+      {
+        path: "/edit-doctor-info/:id",
+        element: <EditDoctorInfo/>,
+      },
+      {
+        path: "/edit-patient-info/:id",
+        element: <EditPatientInfo/>,
       },
 
       {

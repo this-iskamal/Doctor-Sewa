@@ -59,6 +59,10 @@ const loginSchema = new mongoose.Schema({
     },
     condition:{
         type:String,
+    },
+    otp:{
+        type:String,
+        default:"",
     }
 },{
     timestamps: true,

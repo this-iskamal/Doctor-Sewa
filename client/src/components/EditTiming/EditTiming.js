@@ -6,23 +6,23 @@ import baseurl from '../../assets/baseurl'
 import "react-toastify/dist/ReactToastify.css";
 // import DateTimePicker from "react-datetime-picker";
 import styles from "./EditTiming.module.css";
-
+import moment from 'moment'
 import axios from "axios";
 
 function PatientDashboard() {
   const [namee, setNamee] = useState("");
-  const [t1, sett1] = useState("");
-  const [t2, sett2] = useState("");
-  const [date, setdate] = useState("");
+  const [slots, setSlots] = useState([]);
+ const date = '2023-05-25T00:00:00.000+00:00';
+ const [showMenu, setShowMenu] = useState(false);
+
+
   const { id } = useParams();
   useEffect(() => {
     axios
       .get(`${baseurl}/doctor-dashboard/${id}`)
       .then((res) => {
         setNamee(res.data.name);
-        sett1(res.data.timing1);
-        sett2(res.data.timing2);
-        setdate(res.data.date);
+  
       });
   }, [id]);
 
@@ -39,6 +39,14 @@ function PatientDashboard() {
       [name]: value,
     });
   };
+  useEffect(() => {
+    axios
+      .get(`${baseurl}/appointment-info/${id}/${date}`)
+      .then((res) => {
+        setSlots(res.data.appointments);
+        
+      });
+  },[date,id]);
 
   const handleupdataclick = () => {
 
@@ -60,7 +68,7 @@ function PatientDashboard() {
       
     }
   };
-
+  const dates = [];
   const navigate = useNavigate();
 
   const handleprofileclick = () => {
@@ -77,8 +85,17 @@ function PatientDashboard() {
   };
   const handlebuttonclick = () => {
     //
+    navigate(`/doctor-dashboard/${id}`);
+
     //
   };
+  slots.map((dateslot) => {
+    dates.push((dateslot.date).slice(0,10));
+    return null;
+  });
+  const udates = [...new Set(dates)];
+  udates.sort();
+console.log(udates)
 
   return (
     <div className={styles.container}>
@@ -87,9 +104,19 @@ function PatientDashboard() {
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+          <li onClick={handlebuttonclick}>Home</li>
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handleviewappointmentclick}>View Appointments</li>
             <li onClick={handleedittiming}>Edit Timing</li>
@@ -123,11 +150,20 @@ function PatientDashboard() {
           </div>
           <div className={styles.yourtiming}>
           <ToastContainer />  
-            <h1>Your Timing</h1>
-            <h3>{date}</h3>
-            <h3>
-              {t1} -- {t2}
-            </h3>
+            <h1>Your Appointment Dates</h1>
+            {
+              udates?.map((date)=>{
+                return(
+                  <div className={styles.apptime}>
+                  <h1>{moment(date)
+                  
+                  .format("dddd ,  DD MMM YYYY")
+                  .toString()}  </h1>
+                  
+                  </div>
+                )
+              })
+            }
           </div>
         </div>
       </div>

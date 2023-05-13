@@ -8,6 +8,8 @@ import baseurl from '../../assets/baseurl'
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import io from "socket.io-client";
+const socket = io.connect(`${baseurl}`);
 
 function TakeAppointment() {
   const [namee, setNamee] = useState("");
@@ -15,6 +17,8 @@ function TakeAppointment() {
   const [input, setInput] = useState();
   const [showalert, setShowAlert] = useState(false);
   const [inputInvalid, setInputInvalid] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
 
   const [appointmentsdata, setAppointmentsdata] = useState([]);
   const { id } = useParams();
@@ -42,6 +46,7 @@ function TakeAppointment() {
         .post(`${baseurl}/patient-cancel-appointment/${appid}`)
         .then((res) => {
           console.log(res.data.message);
+          socket.on('adminappointment')
           toast.success(res.data.message)
         });
 
@@ -88,6 +93,11 @@ function TakeAppointment() {
     navigate(`/patient-dashboard/take-help/${id}`);
   };
   // const handlecancelbuttonclick = () => {};
+  const handlebuttonclick = () => {
+    //
+    navigate(`/patient-dashboard/${id}`);
+    //
+  };
 
   return (
     <div className={styles.container}>
@@ -114,18 +124,40 @@ function TakeAppointment() {
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
+          <li onClick={handlebuttonclick}>Home</li>
+
             {/* <button onClick={handlebuttonclick}>click</button> */}
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
-            <li onClick={handletakeappointmentclick}>Take Appointment</li>
+            <li onClick={handletakeappointmentclick}>Appointments</li>
             <li onClick={handletakehelpclick}>Take Help</li>
           </ul>
         </div>
         <div className={styles.mainsection}>
           <h1 style={{ color: "black" }}>Your Appointments</h1>
           {appointmentsdata?.map((appointmentdata) => {
+            let value;
+            let color;
+            if(appointmentdata.isConfirmed===true){
+              value='Confirmed';
+              color='green';
+            }
+            if(appointmentdata.isConfirmed===false){
+              value='Not Confirmed'
+              color='red'
+            }
             return (
               <div className={styles.appointmentinfosection}>
                 You have appointment with <br />
@@ -138,8 +170,9 @@ function TakeAppointment() {
                   .format("dddd ,  DD MMM YYYY")
                   .toString()}{" "}
                 <br />
-                at {appointmentdata.time}
+                at {appointmentdata.time} is
                 <br />
+                <h5 style={{backgroundColor:color}}>{value}</h5>
                 <Button
                   onClick={() => showAlert(appointmentdata._id)}
                   variant="danger"

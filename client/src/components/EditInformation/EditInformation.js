@@ -173,7 +173,7 @@ const EditInformation = () => {
   };
 
   return (
-    <form className={styles.form}>
+    <div className={styles.form2}>
       <ToastContainer />
       <h1>Edit Information</h1>
       <div className={styles.field}>
@@ -286,7 +286,7 @@ const EditInformation = () => {
           </button>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

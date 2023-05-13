@@ -1,49 +1,240 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.containerA{
-    background: #455d6dc4;
-    width: 100vw;
-    height: 100vh;
+
+.containerA {
+  background: #455d6dc4;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerA {
+  width: 100%;
+  height: 8%;
+}
+
+.headerA h3 {
+  text-align: center;
+  margin: 1%;
+  color: white;
+}
+
+.sectionA {
+
+  width: 100%;
+  height: 92%;
+  display: flex;
+  flex-direction: row;
+}
+
+.leftsideA {
+  width: 18%;
+  height: 100%;
+
+}
+
+.mainbodyA {
+  width: 80%;
+  height: 100%;
+
+}
+
+.dashboardA {
+  margin: 10px;
+  margin-left: 50px;
+  padding: 8px;
+  font-size: 20px;
+  color: rgb(0, 0, 0);
+  width: 70%;
+  height: 6%;
+  cursor: pointer;
+  color: white;
+}
+
+
+.menuButton {
+  display: none;
+}
+
+.searchdiv{
+  width: 100%;
+  margin: 10px;
+display: flex;
+}
+.searchdiv .searchinput{
+  height: 50px;
+  width: 95%;
+}
+
+
+/* this is test */
+
+
+
+@media screen and (max-width: 768px) {
+  .containerA {
     display: flex;
     flex-direction: column;
-}
-.headerA{
-    width: 100%;
-    height: 8%;
-}
-.headerA h3{
-    text-align: center;
-    margin: 1%;
-    color: white;
-}
-.sectionA{
+    width: 130%;
+    height: 100%;
+  }
 
+  .headerA {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .leftsideA {
+    display: none;
+    flex-direction: column;
+  }
+
+  .showMenu {
+    display: flex;
+    width: 30%;
+  }
+
+  .mainbodyA {
     width: 100%;
-    height: 92%;
+    height: 100vh;
+  }
+
+  .menuButton {
+    display: block;
+    position: absolute;
+    top: 4%;
+    left: 5%;
+    border: none;
+    background: none;
+  }
+}
+
+
+.mainsectionP {
+  background-color: rgba(163, 154, 249, 0.468);
+  height: 100%;
+ overflow-y: scroll;
+
+}
+
+.patientsinfo {
+  background-color: rgb(238, 217, 217);
+  height: 15%;
+  width: 35%;
+  margin: 1%;
+  display: flex;
+  padding: 1%;
+  
+}
+
+.infosection {
+  width: 78%;
+
+}
+
+.editsection {
+  width: 18%;
+
+}
+
+.greenbackground {
+  margin: 2%;
+  border: none;
+  width: 50%;
+  height: 60%;
+  border-radius: 50%;
+  background-color: lightgreen;
+}
+
+.redbackground {
+  border: none;
+  width: 50%;
+  height: 60%;
+  border-radius: 50%;
+  margin: 2%;
+  background-color: red;
+}
+
+
+/* this is test */
+
+
+/* Default styles */
+
+
+.patientsinfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.infosection {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.editsection {
+  display: flex;
+  flex-direction: column;
+}
+
+.greenbackground {
+  background-color: green;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.redbackground {
+  background-color: red;
+  color: white;
+}
+
+/* Media queries for smaller screens */
+@media screen and (max-width: 600px) {
+  
+  .patientsinfo {
+    flex-direction: column;
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
-}
-.leftsideA{
-    width: 18%;
-    height: 100%;
-
-}
-.mainbodyA{
-    width: 80%;
-    height: 100%;
-
-}
-.dashboardA{
-    margin: 10px;
-    margin-left: 50px;
-    padding: 8px;
-    font-size: 20px;
-    color: rgb(0, 0, 0);
     width: 70%;
-    height: 6%;
-    cursor: pointer;
-    color: white;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15%;
+  }
+
+  .infosection {
+    margin-right: 0;
+    margin-bottom: 10px;
+
+  }
+
+  .editsection {
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Media queries for larger screens */
+@media screen and (min-width: 1200px) {
+  .mainsectionP {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .patientsinfo {
+    margin-right: 20px;
+  }
 }

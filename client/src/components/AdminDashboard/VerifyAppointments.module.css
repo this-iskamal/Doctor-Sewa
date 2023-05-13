@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .tcontainer {
+    background-color: rgba(163, 154, 249, 0.468);
+  
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  h1 {
+    margin: 10px;
+    text-align: center;
+  }
+  
+  a {
+    text-decoration: none;
+    color: green;
+  }
+  
+  a:hover {
+    color: rgb(24, 47, 26)
+  }
+  
+  .flexlist {
+    height: 80%;
+    width: 90%;
+    /* border: 1px solid black; */
+  }
+  .flexlist th{
+    border: 1px solid black;
+    text-align: center;
+  }
+  .flexlist td{
+    border: 1px solid black;
+    text-align: center;
+  }
+  
+  .btnverify {
+    background-color: rgb(0, 255, 0);
+    color: white;
+    border: none;
+    padding: 3px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  
+  .btnverify:hover {
+    background-color: green;
+  }
+  
+  .containerA {
+    background: #455d6dc4;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .headerA {
+    width: 100%;
+    height: 8%;
+  }
+  
+  .headerA h3 {
+    text-align: center;
+    margin: 1%;
+    color: white;
+  }
+  
+  .sectionA {
+  
+    width: 100%;
+    height: 92%;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .leftsideA {
+    width: 18%;
+    height: 100%;
+  
+  }
+  
+  .mainbodyA {
+    width: 80%;
+    height: 100%;
+  
+  }
+  
+  .dashboardA {
+    margin: 10px;
+    margin-left: 50px;
+    padding: 8px;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    width: 70%;
+    height: 6%;
+    cursor: pointer;
+    color: white;
+  }
+  
+  
+  
+  .menuButton {
+    display:none;
+  }
+  
+  
+  /* this is test */
+  
+  
+  
+  @media screen and (max-width: 768px) {
+    .containerA {
+      display: flex;
+      flex-direction: column;
+      width: 130%;
+      height: 100%;
+    }
+  
+    .headerA {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .leftsideA {
+      display: none;
+      flex-direction: column;
+    }
+  
+    .showMenu {
+      display: flex;
+      width: 30%;
+    }
+    .mainbodyA{
+        width: 100%;
+        height: 100vh;
+    }
+  
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 4%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+  }
+  
+  

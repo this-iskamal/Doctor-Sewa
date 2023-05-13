@@ -18,25 +18,24 @@
 }
 
 .App {
-    display: flex;
     border-radius: 18px;
     align-items: center;
-    margin-top: 5px;
+
     background-color: #99DDFF;
 }
 
 .fields {
-    width: 40%;
+    width: 80%;
 }
 
-form {
+.form {
+    height: 100vh;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    overflow-y: scroll;
     width: 700px;
     padding: 20px;
     border-radius: 5px;
-    justify-content: space-around;
+    
 }
 
 label {
@@ -78,3 +77,9 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #3e8e41;
 }
+
+
+
+/* this is test */
+
+

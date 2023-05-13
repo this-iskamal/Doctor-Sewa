@@ -4,6 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
 import baseurl from '../../assets/baseurl'
+import io from 'socket.io-client';
+const socket = io.connect(`${baseurl}`);
 
 
 function Dashboard() {
@@ -16,16 +18,30 @@ function Dashboard() {
 
   useEffect(() => {
     axios.get(`${baseurl}/admin-dashboard`).then((res) => {
-      setDoctordetails(res.data.doctordetails);
-      setPatientnumbers(res.data.patientnumber)
-      setDoctornumbers(res.data.doctornumber)
+      setPatientdetails(res.data.data);
+      setDoctordetails(res.data.data1)
+      setPatientnumbers(res.data.dataN)
+      setDoctornumbers(res.data.data1N)
+      
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${baseurl}/admin-dashboard`).then((res) => {
-      setPatientdetails(res.data.patientdetails);
-    });
+    socket.on('data',data=>{
+      setPatientdetails(data);
+    })
+    socket.on('data1',data1=>{
+      setDoctordetails(data1)
+    })
+    socket.on('dataN',dataN=>{
+      setPatientnumbers(dataN)
+      
+    })
+    socket.on('data1N',data1N=>{
+      setDoctornumbers(data1N)
+
+    })
+    
   },[]);
 
   const deleteuser = async (id) => {
@@ -59,9 +75,7 @@ function Dashboard() {
   return (
     <div className={styles.containerDA}>
       <ToastContainer />
-      <div className={styles.buttoncontainer}>
-        
-      </div>
+      
       <div className={styles.doctorssections}>
         <h1>List of Doctors : {doctornumbers}</h1>
         {doctordetails.map((doctor) => {
@@ -86,6 +100,8 @@ function Dashboard() {
       <div className={styles.patientssections}>
         <h1>List of Patients : {patientnumbers}</h1> 
         {patientdetails.map((patient) => {
+          if(patient.username==='Admin'){return null}
+          else{
           return (
             <div className={styles.doctorlist} key={patient.id}>
               <h2> {patient.username}</h2>
@@ -101,7 +117,7 @@ function Dashboard() {
                 </button>
               </div>
             </div>
-          );
+          );}
         })}
       </div>
     </div>

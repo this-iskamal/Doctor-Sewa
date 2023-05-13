@@ -4,6 +4,8 @@ import styles from "./VerifiedDoctors.module.css";
 import DoctorProfile from "../DoctorProfile/DoctorProfile";
 // import { useNavigate } from "react-router-dom";
 import baseurl from '../../assets/baseurl'
+import io from 'socket.io-client';
+const socket = io.connect(`${baseurl}`);
 
 //import DoctorProfile from "../DoctorProfile/DoctorProfile";
 // import App from "../../App";
@@ -11,15 +13,23 @@ import baseurl from '../../assets/baseurl'
 function VerifiedDoctors() {
   // const navigate = useNavigate();
   const [id, setId] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+
   const [showdoctorprofilepeding, setShowdoctorprofilepending] =
     useState(false);
   const [verifieddoctorlists, setVerifieddoctorlists] = useState([]);
 
   useEffect(() => {
     axios.get(`${baseurl}/get-verified-doctors`).then((res) => {
-      setVerifieddoctorlists(res.data.verificationlist);
+      setVerifieddoctorlists(res.data.verificationlist)
+      
     });
-  }, [verifieddoctorlists]);
+  }, []);
+  useEffect(()=>{
+    socket.on('verificationList',verificationlist=>{
+      setVerifieddoctorlists(verificationlist)
+    })
+  })
   const handlereviewclick = (id1) => {
     setId(id1);
     setShowdoctorprofilepending(!showdoctorprofilepeding);
@@ -40,6 +50,9 @@ function VerifiedDoctors() {
   const handledashboardclick = () => {
     window.open("/admin-dashboard", "_self");
   };
+  const handleverifyappointmentsclick = () =>{
+    window.open('/admin-dashboard/verify-appointments','_self')
+  }
 
   const handleverifieddoctorsclick = () => {
     window.open("/admin-dashboard/verify-doctor-list", "_self");
@@ -52,9 +65,17 @@ function VerifiedDoctors() {
       <div className={styles.containerA}>
         <div className={styles.headerA}>
           <h3>Admin Portal</h3>
+          <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>=</h1>
+        </button>
         </div>
         <div className={styles.sectionA}>
-          <div className={styles.leftsideA}>
+        <div
+          className={`${styles.leftsideA} ${showMenu ? styles.showMenu : ""}`}
+        >
             <div className={styles.dashboardA} onClick={handledashboardclick}>
               Dashboard
             </div>
@@ -65,7 +86,7 @@ function VerifiedDoctors() {
               className={styles.dashboardA}
               onClick={handleavailabledoctorsclick}
             >
-              Available Doctors
+            Appointments
             </div>
             <div className={styles.dashboardA} onClick={handlepatientsclick}>
               Patients
@@ -74,8 +95,14 @@ function VerifiedDoctors() {
               className={styles.dashboardA}
               onClick={handleverifieddoctorsclick}
             >
-              Verfy Doctors
+              Verify Doctors
             </div>
+            <div
+            className={styles.dashboardA}
+            onClick={handleverifyappointmentsclick}
+          >
+            Verify Appointments
+          </div>
           </div>
           <div className={styles.mainbodyA}>
             <div className={styles.tcontainer}>

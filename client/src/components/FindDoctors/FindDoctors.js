@@ -12,8 +12,13 @@ import baseurl from '../../assets/baseurl'
 
 function FindDoctors() {
   const [namee, setNamee] = useState("");
-  const [results, setResults] = useState([]);
+  const [doctordetails, setDoctordetails] = useState([]);
+  
+  const [isSpecialitychecked, setIsSpecialitychecked] = useState(false);
+  const [isNamechecked, setIsNamechecked] = useState(false);
   const { id } = useParams();
+  const [showMenu, setShowMenu] = useState(false);
+
   // const [doctordetails, setDoctordetails] = useState([]);
 
   
@@ -47,26 +52,33 @@ function FindDoctors() {
     const fetchResults = async () => {
       if (!query) {
         try {
-          const response = await axios.get(
-            `${baseurl}/find-doctors`
-          );
-          setResults(response.data.doctors);
+          axios.get(`${baseurl}/get-doctor-details`).then((res) => {
+            setDoctordetails(res.data.doctordetails);
+          });
         } catch (err) {
           console.error(err);
         }
         return;
       }
       try {
-        const response = await axios.get(
-          `${baseurl}/find-doctors?q=${query}`
-        );
-        setResults(response.data.doctors);
+        if (isSpecialitychecked) {
+          const response = await axios.get(
+            `${baseurl}/find-doctors?q=${query}`
+          );
+          setDoctordetails(response.data.doctors);
+        }
+        if (isNamechecked) {
+          const response = await axios.get(
+            `${baseurl}/find-doctors1?q=${query}`
+          );
+          setDoctordetails(response.data.doctors);
+        }
       } catch (err) {
         console.error(err);
       }
     };
     fetchResults();
-  }, [query]);
+  }, [query, isSpecialitychecked, isNamechecked]);
 
   // useEffect(() => {
   //   axios.get(`${baseurl}/get-doctor-details`).then((res) => {
@@ -95,6 +107,19 @@ function FindDoctors() {
     setQuery(event.target.value);
 
   };
+  const handlebuttonclick = () => {
+    //
+    navigate(`/patient-dashboard/${id}`);
+    //
+  };
+  const handlespecialitychange = () => {
+    setIsSpecialitychecked(!isSpecialitychecked);
+    if (isNamechecked) setIsNamechecked(!isNamechecked);
+  };
+  const handlenamechange = () => {
+    setIsNamechecked(!isNamechecked);
+    if (isSpecialitychecked) setIsSpecialitychecked(!isSpecialitychecked);
+  };
 
   return (
     <div className={styles.container}>
@@ -103,26 +128,55 @@ function FindDoctors() {
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
-            <button>click</button>
+            
+            <li onClick={handlebuttonclick}>Home</li>
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
-            <li onClick={handletakeappointmentclick}>Take Appointment</li>
+            <li onClick={handletakeappointmentclick}>Appointments</li>
             <li onClick={handletakehelpclick}>Take Help</li>
           </ul>
         </div>
         <div className={styles.mainsection}>
           <div className={styles.containerDO}>
-            <input
-              className={styles.searchinput}
-              type="search"
-              placeholder="Search By Speciality"
-              value={query.trim()}
-              onChange={handlesearchoperation}
-            />
+          <div className={styles.searchdiv}>
+              <input
+                className={styles.searchinput}
+                type="search"
+                placeholder="Search "
+                value={query}
+                onChange={handlesearchoperation}
+              />
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isSpecialitychecked}
+                  onChange={handlespecialitychange}
+                />
+                Speciality
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isNamechecked}
+                  onChange={handlenamechange}
+                />
+                Name
+              </label>
+            </div>
 
-            {results?.map((doctordetail) => {
+            {doctordetails?.map((doctordetail) => {
               return (
                 <Card
                   className={styles.Cardsec}
@@ -153,11 +207,7 @@ function FindDoctors() {
                     <Card.Text>
                       Specialist : {doctordetail.speciality}
                       <br />
-                      Date :{" "}
-                      {doctordetail.date ? doctordetail.date : "Not available"}
-                      <br />
-                      Available : {doctordetail.timing1}--{doctordetail.timing2}
-                      <br />
+                      
                       Status : {doctordetail.condition}
                     </Card.Text>
                     <Button

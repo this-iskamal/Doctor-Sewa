@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
-
+const speakeasy = require('speakeasy')
 require("dotenv").config();
 require("./db/conn");
 const LogindataSchema = require("./models/LogindataSchema");
@@ -19,9 +19,17 @@ const smtpTransport = require("nodemailer-smtp-transport");
 const saltrounds = 10;
 const PORT = process.env.PORT || 8000;
 const app = express();
+app.use(cors());
+const socketio = require("socket.io");
+const server = http.createServer(app);
+const io = socketio(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
-app.use(cors());
+
 app.use(express.static("uploads"));
 var ip = require("ip");
 
@@ -34,6 +42,13 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+
+//websocket lis
+
+let ADMINAPPOINTMENTINFO = [];
+let VIEWAPPOINTMENTS = [];
+
+//
 
 // const mailgun = require("mailgun-js");
 // const DOMAIN = 'sandbox5a2c92b456c742f1a7ac564619bc459a.mailgun.org';
@@ -89,7 +104,21 @@ const transporter = nodemailer.createTransport({
 // console.log(current)
 
 //*****yehe bata reminder pathauni aaile comment gareko xa*****//
+cron.schedule("* * * * *", async () => {
+  const currentTime = new Date();
+
+  const appointmenttodelete = await Appointment.find({
+    date: { $lt: currentTime },
+  });
+  if (appointmenttodelete) {
+    await Appointment.deleteMany({
+      date: { $lt: currentTime },
+    });
+
+  }
+});
 cron.schedule("0 0 * * *", async () => {
+
   const currentTime = new Date();
   console.log("done");
   const appointm = await Appointment.find({
@@ -99,14 +128,7 @@ cron.schedule("0 0 * * *", async () => {
       $lt: new Date(currentTime.getTime() + 24 * 60 * 60 * 1000),
     },
   });
-  const appointmenttodelete = await Appointment.find({
-    date: { $lt: currentTime },
-  });
-  if (appointmenttodelete) {
-    await Appointment.deleteMany({
-      date: { $lt: currentTime },
-    });
-  }
+  
 
   appointm.forEach((appoint) => {
     const mailOptions = {
@@ -141,12 +163,31 @@ app.post("/change-password/:id", async (req, res) => {
     const patient = await LogindataSchema.findOne({
       _id: req.params.id,
     });
+    const doctor = await DoctorLogindataSchema.findOne({
+      _id: req.params.id,
+    });
+
     if (patient) {
       hashnewpwd = await bcrypt.hash(req.body.password, saltrounds);
       query = { _id: req.params.id };
       update = { $set: { password: hashnewpwd } };
-      await LogindataSchema.findOneAndUpdate(query,update,{returnOriginal:false})
-      res.status(200).send({message:"password change successfull", success:true})
+      await LogindataSchema.findOneAndUpdate(query, update, {
+        returnOriginal: false,
+      });
+      res
+        .status(200)
+        .send({ message: "password change successfull", success: true });
+    }
+    if (doctor) {
+      hashnewpwd = await bcrypt.hash(req.body.password, saltrounds);
+      query = { _id: req.params.id };
+      update = { $set: { password: hashnewpwd } };
+      await DoctorLogindataSchema.findOneAndUpdate(query, update, {
+        returnOriginal: false,
+      });
+      res
+        .status(200)
+        .send({ message: "password change successfull", success: true });
     }
   } catch (error) {
     res.status(200).send({ message: "Internal error", success: false });
@@ -154,16 +195,26 @@ app.post("/change-password/:id", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
+  let responseSent = false;
   try {
     const existuser = await LogindataSchema.findOne({ email: req.body.email });
     if (existuser) {
       res.status(200).send({ message: "user already exist", success: false });
+      responseSent = true;
     }
     const existphone = await LogindataSchema.findOne({ phone: req.body.phone });
     if (existphone) {
       res.status(200).send({ message: "phone already exist", success: false });
+      responseSent = true;
     }
-    if (!existuser && !existphone) {
+    const doctormailclash = await DoctorLogindataSchema.findOne({
+      email: req.body.email,
+    });
+    if (doctormailclash) {
+      res.status(200).send({ message: "user already exist", success: false });
+      responseSent = true;
+    }
+    if (!responseSent && !existuser && !existphone && !doctormailclash) {
       const hashpwd = await bcrypt.hash(req.body.password, saltrounds);
       const newuser = new LogindataSchema({
         username: req.body.username,
@@ -176,6 +227,9 @@ app.post("/register", async (req, res) => {
         youare: req.body.youare,
       });
       await newuser.save();
+      // emitdata();
+      const data = await LogindataSchema.find({});
+      io.emit("data", data);
       console.log(
         `Action Signup By ${req.body.username} From ${
           req.body.district
@@ -185,7 +239,9 @@ app.post("/register", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(200).send({ message: "signup error", success: false });
+    if (!responseSent) {
+      res.status(200).send({ message: "signup error", success: false });
+    }
   }
 });
 
@@ -253,8 +309,8 @@ app.post("/doctorlogin", async (req, res) => {
 
 app.get("/admin-dashboard", async (req, res) => {
   try {
-    const patientnumber = await LogindataSchema.count({ youare: "patient" });
-    const doctornumber = await DoctorLogindataSchema.count({
+    const dataN = await LogindataSchema.count({ youare: "patient" });
+    const data1N = await DoctorLogindataSchema.count({
       condition: "Active",
     });
     const patientdetails = await LogindataSchema.find({ youare: "patient" });
@@ -264,12 +320,25 @@ app.get("/admin-dashboard", async (req, res) => {
     if (!patientdetails && !doctordetails) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
+      const data = await LogindataSchema.find({ youare: "patient" });
+      const data1 = await DoctorLogindataSchema.find({
+        condition: "Active",
+      });
+      const dataN = await LogindataSchema.count({ youare: "patient" });
+      const data1N = await DoctorLogindataSchema.count({
+        condition: "Active",
+      });
+      io.emit("data", data);
+      io.emit("data1", data1);
+      io.emit("dataN", dataN);
+      io.emit("data1N", data1N);
+
       res.status(200).send({
         message: "retrieving data",
-        doctordetails,
-        patientdetails,
-        patientnumber,
-        doctornumber,
+        data,
+        data1,
+        dataN,
+        data1N,
         success: true,
       });
     }
@@ -357,6 +426,16 @@ app.get("/doctor-dashboard/:id", async (req, res) => {
 
 app.post("/patient-cancel-appointment/:appid", async (req, res) => {
   try {
+    const appoint = await Appointment.findOne({ _id: req.params.appid });
+    const appointtime = await Appointment.find({
+      doctorid: appoint.doctorid,
+      date: appoint.date,
+    });
+    const appointtime1 = await Appointment.find({
+      doctorid: appoint.doctorid,
+    });
+    io.emit("appointtime", appointtime);
+    io.emit("appointtimee", appointtime1);
     const query = {
       _id: req.params.appid,
     };
@@ -366,12 +445,19 @@ app.post("/patient-cancel-appointment/:appid", async (req, res) => {
         patientName: "",
         patientid: "",
         patientEmail: "",
+        isConfirmed:false,
       },
     };
     await Appointment.findOneAndUpdate(query, update, {
       returnOriginal: false,
     });
-    console.log("done");
+
+    const adminappointmentinfo = await Appointment.find({
+      patientid: { $exists: true, $ne: "" },
+    });
+    ADMINAPPOINTMENTINFO = adminappointmentinfo;
+    emitdata();
+
     res.status(200).send({
       message: `Appointment canceled`,
       success: true,
@@ -402,6 +488,48 @@ app.get("/find-doctors", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
+app.get("/find-patient", async (req, res) => {
+  const query = req.query.q;
+
+  try {
+    if (!query) {
+      patients = await LogindataSchema.find({ youare:'patient'});
+    } else {
+      patients = await LogindataSchema.find({
+        username: {
+          $regex: query,
+          $options: "i",
+        },
+        youare:'patient',
+      });
+    }
+
+    res.status(200).send({ message: "searching", patients });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.get("/find-doctors1", async (req, res) => {
+  const query = req.query.q;
+  let doctors;
+  try {
+    if (!query) {
+      doctors = await DoctorLogindataSchema.find({ condition: "Active" });
+    } else {
+      doctors = await DoctorLogindataSchema.find({
+        name: {
+          $regex: query,
+          $options: "i",
+        },
+        condition: "Active",
+      });
+    }
+
+    res.status(200).send({ message: "searching", doctors });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
 
 app.get("/patient-edit-information/:id", async (req, res) => {
   try {
@@ -410,6 +538,18 @@ app.get("/patient-edit-information/:id", async (req, res) => {
     });
     if (patientInfo) {
       res.status(200).send({ message: "found info", patientInfo });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.get("/doctor-edit-information/:id", async (req, res) => {
+  try {
+    const doctorinfo = await DoctorLogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    if (doctorinfo) {
+      res.status(200).send({ message: "found info", doctorinfo });
     }
   } catch (error) {
     res.status(200).send({ message: "internal error", success: false });
@@ -446,6 +586,11 @@ app.post("/patient-update-information/:id", async (req, res) => {
         age: req.body.age,
       },
     };
+    const updatePhone = {
+      $set: {
+        age: req.body.phone,
+      },
+    };
 
     if (req.body.username) {
       await LogindataSchema.findOneAndUpdate(query, updateUsername, {
@@ -462,6 +607,12 @@ app.post("/patient-update-information/:id", async (req, res) => {
         returnOriginal: false,
       });
       console.log("address change");
+    }
+    else if (req.body.phone) {
+      await LogindataSchema.findOneAndUpdate(query, updatePhone, {
+        returnOriginal: false,
+      });
+      console.log("change phone");
     } else if (req.body.gender) {
       await LogindataSchema.findOneAndUpdate(query, updateGender, {
         returnOriginal: false,
@@ -479,6 +630,105 @@ app.post("/patient-update-information/:id", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
+app.post("/doctor-update-information/:id", async (req, res) => {
+  try {
+    console.log(req.body.username)
+    const query = {
+      _id: req.params.id,
+    };
+    const updateUsername = {
+      $set: {
+        name: req.body.username,
+      },
+    };
+    const updateEmail = {
+      $set: {
+        email: req.body.email,
+      },
+    };
+    const updateAddress = {
+      $set: {
+        address: req.body.address,
+      },
+    };
+    const updateGender = {
+      $set: {
+        gender: req.body.gender,
+      },
+    };
+    const updatePhone = {
+      $set: {
+        phone: req.body.phone,
+      },
+    };
+    const updateSpecialty = {
+      $set: {
+        speciality: req.body.specialty,
+      },
+    };
+    const updateAge = {
+      $set: {
+        age: req.body.age,
+      },
+    };
+
+    if (req.body.username) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateUsername, {
+        returnOriginal: false,
+      });
+      console.log("name change");
+    } else if (req.body.email) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateEmail, {
+        returnOriginal: false,
+      });
+      console.log("change email");
+    } else if (req.body.address) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateAddress, {
+        returnOriginal: false,
+      });
+      console.log("address change");
+    } else if (req.body.gender) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateGender, {
+        returnOriginal: false,
+      });
+      console.log("gender change");
+    } else if (req.body.age) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateAge, {
+        returnOriginal: false,
+      });
+      console.log("age change");
+    }
+    else if (req.body.specialty) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updateSpecialty, {
+        returnOriginal: false,
+      });
+      console.log('specialty change')
+    }
+    else if (req.body.phone) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updatePhone, {
+        returnOriginal: false,
+      });
+      console.log('phone change')
+    }
+
+
+    res.status(200).send({ message: "update successfull", success: true });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.delete(`/delete-doctor/:id`, async(req,res)=>{
+  try {
+    await DoctorLogindataSchema.deleteOne({ _id: req.params.id });
+      res.status(200).send({
+        message: `user deleted : ${usertobedeleted.username}`,
+        success: true,
+      });
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+    
+  }
+})
 
 app.delete("/admin-dashboard/:id", async (req, res) => {
   try {
@@ -501,7 +751,7 @@ app.delete("/admin-dashboard/:id", async (req, res) => {
       if (doctordelete) {
         await DoctorLogindataSchema.deleteOne({ _id: req.params.id });
         res.status(200).send({
-          message: `user deleted : ${doctordelete.name}`,
+          message: `doctor deleted : ${doctordelete.name}`,
           success: true,
         });
         return;
@@ -565,12 +815,42 @@ app.post("/doctor-dashboard/timing/:id", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
-
-app.post("/book-now/:id1/:id", async (req, res) => {
+app.post("/doctor-book-slot/:id",async (req,res)=>{
   try {
+    console.log(req.params.id)
+    const query = {
+      _id: req.params.id,
+
+    };
+    const update = {
+      $set: {
+        status: "unavailable",
+        patientName: "---",
+        patientid: "---",
+        patientEmail: "---",
+        paymentPhoto:"---",
+      },
+    };
+    await Appointment.findOneAndUpdate(query, update, {
+      returnOriginal: false,
+    });
+    res.status(200).send({
+      message: `Booking succes to doctor`,
+      success: true,
+    });
+
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+    
+  }
+})
+app.post("/book-now/:id1/:id",upload.single("paymentPhoto"), async (req, res) => {
+  try {
+   
+    const date1 = req.body.datess;
     const appcount = await Appointment.count({
       patientid: req.params.id,
-      date: req.body.date,
+      date: req.body.datess,
     });
     if (appcount === 1) {
       res.status(200).send({
@@ -578,20 +858,22 @@ app.post("/book-now/:id1/:id", async (req, res) => {
         success: false,
       });
     }
+
     if (appcount === 0) {
       const doctor = await DoctorLogindataSchema.findOne({
         _id: req.params.id1,
       });
-      const date1 = req.body.date + "T00:00:00.000+00:00";
+
       const try1 = await Appointment.findOne({
         doctorid: req.params.id1,
         time: req.body.time,
         date: date1,
         status: "unavailable",
+        
       });
+
       const patient = await LogindataSchema.findOne({ _id: req.params.id });
       if (!try1) {
-        console.log("hello");
         const query = {
           doctorid: req.params.id1,
           time: req.body.time,
@@ -603,13 +885,30 @@ app.post("/book-now/:id1/:id", async (req, res) => {
             patientName: patient.username,
             patientid: patient._id,
             patientEmail: patient.email,
+            paymentPhoto:req.file.filename,
           },
         };
         await Appointment.findOneAndUpdate(query, update, {
           returnOriginal: false,
         });
+        const appointments = await Appointment.find({
+          doctorid: req.params.id1,
+          date: date1,
+        });
+
+        io.emit("appointtime", appointments);
+        const adminappointmentinfo = await Appointment.find({
+          patientid: { $exists: true, $ne: "" },
+        });
+
+        ADMINAPPOINTMENTINFO = adminappointmentinfo;
+        emitdata();
+        const dappoint = await Appointment.find({
+          doctorid: req.params.id1,
+        });
+        io.emit("appointtimee", dappoint);
         res.status(200).send({
-          message: `Booking succes to doctor ${doctor.name} for date ${req.body.date} at ${req.body.time}`,
+          message: `Booking succes to doctor ${doctor.name} for date ${req.body.datess} at ${req.body.time}`,
           success: true,
         });
       } else {
@@ -630,11 +929,57 @@ app.get("/admin-appointment-info", async (req, res) => {
   try {
     const adminappointmentinfo = await Appointment.find({
       patientid: { $exists: true, $ne: "" },
+      isConfirmed:true,
     });
     if (adminappointmentinfo) {
+      ADMINAPPOINTMENTINFO = adminappointmentinfo;
+      emitdata();
       res
         .status(200)
         .send({ message: "done", adminappointmentinfo, success: true });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.get("/admin-appointment-info-verify", async (req, res) => {
+  try {
+    const adminappointmentinfo = await Appointment.find({
+      patientid: { $exists: true, $ne: "" },
+      isConfirmed:false,
+    });
+    if (adminappointmentinfo) {
+     
+      ADMINAPPOINTMENTINFO = adminappointmentinfo;
+
+      
+      emitdata();
+      res
+        .status(200)
+        .send({ message: "done", adminappointmentinfo, success: true });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.get("/admin-appointment-info-verify/:id", async (req, res) => {
+  try {
+    
+    const adminappointmentinfo = await Appointment.findOne({
+     _id:req.params.id,
+    });
+    if (adminappointmentinfo) {
+     
+      const patient = await LogindataSchema.findOne({
+        _id:adminappointmentinfo.patientid,
+      })
+      const doctor = await DoctorLogindataSchema.findOne({
+        _id:adminappointmentinfo.doctorid,
+      })
+      res
+        .status(200)
+        .send({ message: "done", adminappointmentinfo,patient,doctor, success: true });
     }
   } catch (error) {
     res.status(200).send({ message: "internal error", success: false });
@@ -722,6 +1067,87 @@ app.post("/otp-confirm/:id", async (req, res) => {
   }
 });
 
+app.post("/doctor-send-otp/:id", async (req, res) => {
+  try {
+    const min = 100000;
+    const max = 999999;
+    const otp = Math.floor(Math.random() * (max - min + 1) + min);
+    const doctor = await DoctorLogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL, // generated ethereal user
+        pass: process.env.PASS, // generated ethereal password
+      },
+    });
+    const mailOptions = {
+      from: "doctorsewa770@gmail.com",
+      to: doctor.email,
+      subject: "Change Password OTP",
+      html: `
+        <body>
+          <h1>Password Change Request for OTP</h1>
+          <p>Dear ${doctor.name},</p>
+         
+          <br>
+          <p>Your OTP is <br> <b><h1>${otp}</h1></b>
+          <br>
+
+          <p>Please do not share your OTP with others </p>
+
+          <p>Sincerely,</p>
+          <p>Doctor Sewa Team</p>
+        </body>
+      `,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending OTP:", error);
+      } else {
+        console.log(`OTP sent to ${doctor.name}`);
+      }
+    });
+
+    const query = { _id: req.params.id };
+    const update = { $set: { otp: otp } };
+    await DoctorLogindataSchema.findOneAndUpdate(query, update, {
+      returnOriginal: false,
+    });
+    res
+      .status(200)
+      .send({ message: "OTP sent successfully to your email", success: true });
+    setTimeout(async () => {
+      const query1 = { _id: req.params.id };
+      const update1 = { $set: { otp: "" } };
+      await DoctorLogindataSchema.findOneAndUpdate(query1, update1, {
+        returnOriginal: false,
+      });
+      console.log("otp destroyed");
+    }, 300000);
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
+app.post("/doctor-otp-confirm/:id", async (req, res) => {
+  try {
+    const doctor = await DoctorLogindataSchema.findOne({
+      _id: req.params.id,
+    });
+    if (doctor.otp === req.body.password) {
+      res.status(200).send({ message: "OTP confirmed", success: true });
+    } else {
+      res.status(200).send({ message: "Invalid OTP", success: false });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+
 app.get("/patient-appointment-info/:id", async (req, res) => {
   try {
     const data = await Appointment.find({
@@ -735,15 +1161,52 @@ app.get("/patient-appointment-info/:id", async (req, res) => {
   }
 });
 
+// app.get("/appointment-info/:id/:date", async (req, res) => {
+//   try {
+//     const date1 = req.params.date + "T00:00:00.000+00:00";
+
+//     const appointments = await Appointment.find({
+//       doctorid: req.params.id,
+//       date: date1,
+//     });
+//     if (appointments) {
+//       io.emit("appointtime", appointments);
+//       res.status(200).send({ message: "done", appointments, success: true });
+//     }
+//   } catch (error) {
+//     res.status(200).send({ message: "internal error", success: false });
+//   }
+// });
+
 app.get("/appointment-info/:id/:date", async (req, res) => {
   try {
-    const date1 = req.params.date + "T00:00:00.000+00:00";
+    // const date1 = req.params.date + "T00:00:00.000+00:00";
 
     const appointments = await Appointment.find({
       doctorid: req.params.id,
-      date: date1,
+   
+      // date: date1,
     });
     if (appointments) {
+      io.emit("appointtime", appointments);
+      res.status(200).send({ message: "done", appointments, success: true });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.get("/appointment-info1/:id/:date", async (req, res) => {
+  try {
+    // const date1 = req.params.date + "T00:00:00.000+00:00";
+
+    const appointments = await Appointment.find({
+      doctorid: req.params.id,
+     status:'unavailable',
+      // date: date1,
+    });
+    if (appointments) {
+
+      io.emit("appointtime", appointments);
       res.status(200).send({ message: "done", appointments, success: true });
     }
   } catch (error) {
@@ -760,26 +1223,99 @@ app.post("/select-doctor/:id", async (req, res) => {
       { _id: req.params.id },
       { $set: { condition: "Active" } }
     );
+    const getdoctor = await DoctorLogindataSchema.find({
+      condition: "Active",
+    });
+    io.emit("getdoctor", getdoctor);
     res.status(200).send({ message: "done" });
+  } catch (err) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.post("/select-appointment/:id", async (req, res) => {
+  try {
+    const usertoselect = await Appointment.findOne({
+      _id: req.params.id,
+    });
+    await Appointment.updateOne(
+      { _id: req.params.id },
+      { $set: { isConfirmed: true } }
+    );
+    
+    
+    res.status(200).send({ message: "Done" });
+  } catch (err) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.post("/reject-appointment/:id", async (req, res) => {
+  try {
+    const usertoselect = await Appointment.findOne({
+      _id: req.params.id,
+    });
+    await Appointment.updateOne(
+      { _id: req.params.id },
+      { $set: { 
+        isConfirmed: false,
+        patientid:"",
+        patientEmail:"",
+        status:"available",
+        patientName:"",
+        paymentPhoto:"",
+      
+      } }
+    );
+    
+    
+    res.status(200).send({ message: "Done" });
   } catch (err) {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
 
 app.post(
+  "/doctor-profile-change/:id",
+  upload.single("profile"),
+  async (req, res) => {
+    try {
+      const doctor = await DoctorLogindataSchema.findOne({
+        _id: req.params.id,
+      });
+      if (doctor) {
+       
+        query = { _id: req.params.id };
+        update = { $set: { profilePhoto: req.file.filename } };
+        await DoctorLogindataSchema.findOneAndUpdate(query, update, {
+          returnOriginal: false,
+        });
+        res
+          .status(200)
+          .send({ message: "Profile change successfull", success: true });
+      }
+    } catch (error) {
+      res.status(200).send({ message: "internal error", success: false });
+    }
+  }
+);
+app.post(
   "/register-doctor",
   upload.fields([{ name: "profilePhoto" }, { name: "certificates" }]),
   async (req, res) => {
+    let responseSent = false;
+
     try {
       const emailcha = await DoctorLogindataSchema.findOne({
         email: req.body.email,
       });
+
       if (emailcha) {
         console.log("emial clone request");
         res
           .status(200)
           .send({ message: "Email already exists", success: false });
+        responseSent = true;
       }
+
       const phonecha = await DoctorLogindataSchema.findOne({
         phone: req.body.phone,
       });
@@ -789,8 +1325,21 @@ app.post(
         res
           .status(200)
           .send({ message: "Phone already exists", success: false });
+        responseSent = true;
       }
-      if (!emailcha && !phonecha) {
+
+      const patientclash = await LogindataSchema.findOne({
+        email: req.body.email,
+      });
+      if (patientclash) {
+        console.log("emial clone11 request");
+        res.status(200).send({ message: "user already exist", success: false });
+        responseSent = true;
+      }
+
+      if (!responseSent && !emailcha && !phonecha && !patientclash) {
+        // Your existing code goes here
+
         const formData = req.body;
         const profilePhoto = req.files.profilePhoto[0].filename;
         const certificates = req.files.certificates.map(
@@ -816,6 +1365,10 @@ app.post(
         // Save the document to the database
 
         await newFormData.save();
+        const verificationlist = await DoctorLogindataSchema.find({
+          condition: "Inactive",
+        });
+        io.emit("verificationList", verificationlist);
         console.log(`${req.body.name} registered success`);
         res
           .status(200)
@@ -823,12 +1376,15 @@ app.post(
       }
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send({ message: "Error saving form data", success: false });
+      if (!responseSent) {
+        res
+          .status(500)
+          .send({ message: "Error saving form data", success: false });
+      }
     }
   }
 );
+
 app.get("/get-verified-doctors", async (req, res) => {
   try {
     const verificationlist = await DoctorLogindataSchema.find({
@@ -837,6 +1393,7 @@ app.get("/get-verified-doctors", async (req, res) => {
     if (!verificationlist) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
+      io.emit("verificationList", verificationlist);
       res.status(200).send({
         message: "retrieving data",
         verificationlist,
@@ -870,6 +1427,23 @@ app.get("/get-pending-doctor-profile/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+const emitdata = async () => {
+  try {
+    io.emit("adminappointment", ADMINAPPOINTMENTINFO);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+io.on("connection", (socket) => {
+  // console.log("admin connected");
+  emitdata();
+
+  // socket.on("disconnect", () => {
+  //   console.log("admin disconnected");
+  // });
+});
+
+server.listen(PORT, '192.168.0.114',() => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });

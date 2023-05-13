@@ -113,7 +113,7 @@ function Applyasdoctor() {
         Sign Up as Patient
       </button>
       <div className={styles.App}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.fields}>
             <label>
               Name:

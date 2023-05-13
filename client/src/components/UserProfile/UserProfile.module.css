@@ -76,7 +76,7 @@ li {
 .diseasesection {
     height: 100%;
     width: 80%;
-    border: 1px solid black;
+
     display: flex;
     flex-wrap: wrap;
     overflow-y: scroll;
@@ -156,7 +156,7 @@ li {
 
 
 .userprofile{
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 98%;
     height: 98%;
     display: flex;
@@ -190,7 +190,7 @@ li {
     justify-content: center;
     font-size: 22px;
     color: rgb(68, 54, 54);
-    border: 1px solid black;
+    /* border: 1px solid black; */
     margin-top: 10px;
     background-color: aliceblue;
 }
@@ -202,7 +202,7 @@ li {
 
 .infosection{
     display: flex;
-    border: 1px solid black;
+
     height: 500px;
     width: 800px;
     color: black;
@@ -212,3 +212,108 @@ li {
 }
 
 
+
+
+/* this is test */
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .topsection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .navbottom {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .leftsection {
+      background-color: #4CAF50;
+  
+    width: 200px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .leftsection ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .leftsection li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .leftsection li:hover {
+    background-color: #86d559;
+  }
+  
+  .mainsection {
+    flex: 1;
+    padding: 20px;
+  }
+  
+
+  .menuButton {
+    display:none;
+  }
+  /* this is second test*/
+
+
+
+  /*second test end here*/
+
+
+
+  
+@media screen and (max-width: 768px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+    .leftsection {
+      display: none;
+    }
+    .mainsection {
+      flex: 1;
+    }
+    
+    .leftsection {
+      display: none;
+      flex-direction: column;
+      padding: 0;  
+    
+    }
+    .leftsection > li{
+      padding: 0px;
+      
+    }
+    .showMenu {
+      display: flex;
+      width: 35%;
+    }
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 11%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+    
+  }
+  

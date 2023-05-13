@@ -53,15 +53,16 @@
 }
 
 .appointmentinfo{
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     padding: 8px;
-    border: 1px solid black;
+
 
 
 
     /* align-items: center; */
-    background-color: rgb(193, 193, 193);
+    background-color: rgba(163, 154, 249, 0.468);
+
 }
 .appointmentinfo> table >tr> th{
     border: 1px solid black;
@@ -85,3 +86,53 @@ tbody > td > button{
     width: 100%;
     
 }
+
+
+
+.menuButton {
+    display:none;
+  }
+
+
+/* this is test */
+
+
+
+@media screen and (max-width: 768px) {
+    .containerA {
+      display: flex;
+      flex-direction: column;
+      width: 130%;
+      height: 100%;
+    }
+  
+    .headerA {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .leftsideA {
+      display: none;
+      flex-direction: column;
+    }
+  
+    .showMenu {
+      display: flex;
+      width: 30%;
+    }
+    .mainbodyA{
+        width: 100%;
+        height: 100vh;
+    }
+  
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 4%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+  }
+  

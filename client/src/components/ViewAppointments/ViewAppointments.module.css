@@ -15,11 +15,12 @@
 
 .topsection {
     height: 10%;
-    align-items: center;
+   
     background-color: aqua;
     display: flex;
-    justify-content: space-between;
+ justify-content: space-between;
     padding: 10px;
+    align-items: center;
 }
 
 .navbottom {
@@ -36,6 +37,7 @@
 .topsection h1 {
     font-size: 40px;
     font-family: poppins;
+    
 }
 
 .leftsection {
@@ -93,15 +95,28 @@ li {
     font-size: 20px;
 }   
 
-.timeslot{
+.appoint{
 
-    height: fit-content;
     width: 80%;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+    margin: 1%;
+    background-color: rgb(169, 190, 242);
+    padding: .5%;
+    border-radius: 5px;
+   
+}
+
+.timeslot{
+    height: fit-content;
+    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
+
+    margin: 1%;
+    padding: 1%;
     /* overflow-y: scroll; */
 }
 
@@ -134,3 +149,136 @@ li {
   .buttonclick{
     background-color: rgb(179, 255, 0);
   }
+
+
+
+  
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .topsection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .navbottom {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .leftsection {
+      background-color: #4CAF50;
+  
+    width: 200px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .leftsection ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .leftsection li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .leftsection li:hover {
+    background-color: #86d559;
+  }
+  
+  .mainsection {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+  }
+  
+
+  .menuButton {
+    display:none;
+  }
+  /* this is second test*/
+
+/* CustomMenu.module.css */
+
+.custommenu {
+  position: absolute;
+  background-color: #c46e6e;
+  width: 5%;
+
+  color: black;
+  list-style: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.custommenu ul {
+  margin: 0;
+  padding: 0;
+}
+
+.custommenu li {
+  cursor: pointer;
+  margin: 0;
+  padding: 2%;
+
+}
+
+.custommenu li:hover {
+  background-color: #aa0202;
+  color: white;
+}
+
+
+  /*second test end here*/
+
+
+
+  
+@media screen and (max-width: 768px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+    .leftsection {
+      display: none;
+    }
+    .mainsection {
+      flex: 1;
+    }
+    
+    .leftsection {
+      display: none;
+      flex-direction: column;
+      padding: 0;  
+    
+    }
+    .leftsection > li{
+      padding: 0px;
+      
+    }
+    .showMenu {
+      display: flex;
+      width: 35%;
+    }
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 11%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+    
+  }
+  

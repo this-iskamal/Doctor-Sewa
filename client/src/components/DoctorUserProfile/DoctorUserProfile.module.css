@@ -36,6 +36,7 @@
 .topsection h1 {
     font-size: 40px;
     font-family: poppins;
+    
 }
 
 .leftsection {
@@ -179,9 +180,9 @@ li {
     justify-content: flex-start;
     align-items: center;
 }
-.button{
-    height: 40px;
-    width: 80%;
+/* .button{
+    height: 50px;
+    width: 70%;
     position: relative;
     display: flex;
     background: transparent;
@@ -193,7 +194,8 @@ li {
     border: 1px solid black;
     margin-top: 10px;
     background-color: aliceblue;
-}
+  
+} */
 .userimage img{
     height: 250px;
     width: 250px;
@@ -202,7 +204,7 @@ li {
 
 .infosection{
     display: flex;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     height: 50%;
     width: 70%;
     color: black;
@@ -212,3 +214,106 @@ li {
 }
 
 
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .topsection {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .navbottom {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .leftsection {
+      background-color: #4CAF50;
+  
+    width: 200px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .leftsection ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .leftsection li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .leftsection li:hover {
+    background-color: #86d559;
+  }
+  
+  .mainsection {
+    flex: 1;
+    padding: 20px;
+    
+  }
+  
+
+  .menuButton {
+    display:none;
+  }
+  /* this is second test*/
+
+
+
+  /*second test end here*/
+
+
+
+  
+@media screen and (max-width: 768px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+    .leftsection {
+      display: none;
+    }
+    .mainsection {
+      flex: 1;
+    }
+    
+    .leftsection {
+      display: none;
+      flex-direction: column;
+      padding: 0;  
+    
+    }
+    .leftsection > li{
+      padding: 0px;
+      
+    }
+    .showMenu {
+      display: flex;
+      width: 35%;
+    }
+    .menuButton {
+      display: block;
+      position: absolute;
+      top: 11%;
+      left: 5%;
+      border: none;
+      background: none;
+    }
+    
+  }
+  

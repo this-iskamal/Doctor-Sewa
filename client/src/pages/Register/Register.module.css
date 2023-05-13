@@ -10,9 +10,7 @@
     height: 100%;
     display: flex;
 }
-/* .containerRegister.blur{
-    filter: blur(5px);
-} */
+
 
 .leftR {
     width: 40vw;
@@ -74,7 +72,7 @@
 
 .rightR .rightcontainer {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-    width: 80%;
+    width: 100%;
     height: 97%;
     background-color: white;
     border-radius: 15px;
@@ -141,3 +139,62 @@ select {
 .rightcontainer form input[type="submit"]:hover {
     background-color: #3e8e41;
 }
+
+
+
+
+
+/* this is test */
+
+
+
+.containerRegister {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftR {
+  flex-basis: 100%;
+  text-align: center;
+
+  /* margin-bottom: 2rem; */
+}
+
+.rightR {
+  flex-basis: 100%;
+  /* margin-bottom: 2rem; */
+}
+
+@media screen and (min-width: 768px) {
+  .containerRegister {
+    flex-wrap: nowrap;
+  }
+
+  .leftR {
+    flex-basis: 50%;
+    text-align: left;
+    margin-bottom: 0;
+    padding-right: 2rem;
+  }
+
+  .rightR {
+    flex-basis: 50%;
+    padding-left: 2rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .rightcontainer {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+}
+
+
+
+
+
+

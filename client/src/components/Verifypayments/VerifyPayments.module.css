@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: aquamarine;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.doctorprofilephoto {
+    height: 80%;
+    border: 1px solid black;
+    width: 80%;
+    display: flex;
+    justify-content: flex-start;
+
+}
+
+.doctorprofilephoto img {
+    border-radius: 50%;
+    margin: 2%;
+    height: 200px;
+    width: 200px;
+    border: 1px solid black;
+}
+
+.buttonclass {
+    width: 5vw;
+    height: 5vh;
+    border: none;
+    margin: 5px;
+}
+
+.doctorprofiletemplate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+
+    background-color: bisque;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.card {
+    height: 90%;
+    width: 45%;
+    background: #3405a3;
+    border-radius: 15px;
+    box-shadow: 1px 5px 60px 0px #100a886b;
+}
+
+.card .cardbordertop {
+    width: 60%;
+    height: 3%;
+    background: #6b64f3;
+    margin: auto;
+    border-radius: 0px 0px 15px 15px;
+}
+
+.card span {
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    display: block;
+    padding-top: 10px;
+    font-size: 26px;
+}
+
+.doctoridsection{
+    margin: 0px auto;
+    display: flex;
+    width: 300px;
+    align-items:flex-start;
+    flex-direction: column;
+}
+.buttonflex{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.buttonflex button{
+    width: 40%;
+}
+
+.card .job {
+    font-weight: 400;
+    color: white;
+    display: block;
+    text-align: center;
+    padding-top: 3px;
+    font-size: 18px;
+}
+.img img{
+    height: 200px;
+    width: 200px;
+    border-radius: 15px;
+}
+.card .img {
+    width: 200px;
+    height: 200px;
+    background: #6b64f3;
+    border-radius: 15px;
+    margin: auto;
+    margin-top: 25px;
+}
+
+.card button {
+    padding: 8px 25px;
+    display: block;
+    margin: auto;
+    border-radius: 8px;
+    border: none;
+    margin-top: 30px;
+    background: #6b64f3;
+    color: white;
+    font-weight: 600;
+}
+
+.card button:hover {
+    background: #534bf3;
+}
+
+
+
+

@@ -48,7 +48,7 @@ function ChangePassword() {
 
       <h1>Change Password</h1>
       <input
-        type="text"
+        type="password"
         name="password"
         value={passwords.password}
         className={styles.inputfieldsize}
@@ -56,7 +56,7 @@ function ChangePassword() {
         onChange={handlepasswordchange}
       />
       <input
-        type="text"
+        type="password"
         name="cpassword"
         value={passwords.cpassword}
         className={styles.inputfieldsize}

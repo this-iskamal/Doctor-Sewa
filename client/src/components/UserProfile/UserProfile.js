@@ -3,26 +3,25 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./UserProfile.module.css";
 import testimage from "../../assets/images/left.jpg";
-import baseurl from '../../assets/baseurl'
-
+import baseurl from "../../assets/baseurl";
 
 function UserProfile() {
   const [namee, setNamee] = useState("");
-  const [email, setEmail]=useState('')
-  const [age,setAge]=useState('')
-  const [gender,setGender]=useState('')
-  const [address,setAddress]=useState('')
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [address, setAddress] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+
   const { id } = useParams();
   useEffect(() => {
-    axios
-      .get(`${baseurl}/patient-dashboard/${id}`)
-      .then((res) => {
-        setNamee(res.data.name);
-        setEmail(res.data.email)
-        setGender(res.data.gender)
-        setAddress(res.data.address)
-        setAge(res.data.age)
-      });
+    axios.get(`${baseurl}/patient-dashboard/${id}`).then((res) => {
+      setNamee(res.data.name);
+      setEmail(res.data.email);
+      setGender(res.data.gender);
+      setAddress(res.data.address);
+      setAge(res.data.age);
+    });
   }, [id]);
 
   const navigate = useNavigate();
@@ -41,12 +40,13 @@ function UserProfile() {
   };
   const handlebuttonclick = () => {
     //
+    navigate(`/patient-dashboard/${id}`);
     //
   };
 
-  const handleeditbuttonclick = () =>{
-      window.open(`/edit-information/${id}`,"_blank")
-  }
+  const handleeditbuttonclick = () => {
+    window.open(`/edit-information/${id}`, "_blank");
+  };
 
   return (
     <div className={styles.container}>
@@ -55,12 +55,23 @@ function UserProfile() {
         <p>Hello, {namee}</p>
       </div>
       <div className={styles.navbottom}>
-        <div className={styles.leftsection}>
+      <button
+          className={styles.menuButton}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <h1>
+            <i class="fa fa-bars"></i>
+          </h1>
+        </button>
+        <div
+          className={`${styles.leftsection} ${showMenu ? styles.showMenu : ""}`}
+        >
           <ul>
-            <button onClick={handlebuttonclick}>click</button>
+            <li onClick={handlebuttonclick}>Home</li>
+
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
-            <li onClick={handletakeappointmentclick}>Take Appointment</li>
+            <li onClick={handletakeappointmentclick}>Appointments</li>
             <li onClick={handletakehelpclick}>Take Help</li>
           </ul>
         </div>
@@ -79,7 +90,11 @@ function UserProfile() {
                 <li>Age : {age}</li>
                 <li>Gender : {gender}</li>
                 <li>Address : {address}</li>
-                <li><button onClick={handleeditbuttonclick}>Edit Information</button></li>
+                <li>
+                  <button onClick={handleeditbuttonclick}>
+                    Edit Information
+                  </button>
+                </li>
               </ul>
             </div>
           </div>

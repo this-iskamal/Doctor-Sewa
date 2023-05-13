@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import baseurl from '../../assets/baseurl'
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "./DoctorProfile.module.css";
 
 function DoctorProfile(props) {
@@ -12,7 +13,7 @@ function DoctorProfile(props) {
       .then((res) => {
         setDoctorprofile(res.data.prendingdoctorlist);
       });
-  }, [doctorprofile , props.id]);
+  }, [ props.id]);
 
   const handleviewfile = () =>{
     window.open(`${baseurl}/${doctorprofile.certificates[0]}`, '_blank', 'noopener');
@@ -28,11 +29,18 @@ function DoctorProfile(props) {
 
   const handlerejectclick = () =>{
     axios.delete(`${baseurl}/delete-doctor/${props.id}`)
-    .then((res)=>{})
+    .then((res)=>{
+      toast.success(res.data.message);
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+    })
   }
   return (
     <>
       <div className={styles.container}>
+      <ToastContainer />
+
         <button
           className={styles.buttonclass}
           onClick={() => window.location.reload()}
