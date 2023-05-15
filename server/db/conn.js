@@ -3,7 +3,7 @@ const urla = process.env.DATABASEa;
 const urlb = process.env.DATABASEb  ;
 
 
-mongoose.connect(urlb,{
+mongoose.connect(urla,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
 }).then(()=>{

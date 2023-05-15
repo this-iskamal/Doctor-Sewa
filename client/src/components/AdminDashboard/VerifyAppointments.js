@@ -134,8 +134,8 @@ function VerifyAppointments() {
 
                           <td>{doctordetail.time}</td>
                           <td>
-                            {doctordetail.updatedAt.slice(0, 10)} --{" "}
-                            {hours} :   {minutes}
+                            {doctordetail.updatedAt.slice(0, 10)} -- {" "}
+                            {hours}:{minutes}
                           </td>
 
                           <td>
