@@ -12,7 +12,13 @@ function TakeHelp() {
 
   useEffect(() => {
     axios
-      .get(`${baseurl}/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`,
+
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setNamee(res.data.name);
         console.log(res.data.name);

@@ -1,78 +1,77 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* LandingPage.module.css */
 
 .container {
-    /* background: url('../../assets/images/stethoscope.jpg');
-    background-repeat: no-repeat;
-    background-size: cover; */
-    background: rgba(255, 10, 10, 0.452);
-    font: 16px/1.4 sans-serif;
-    letter-spacing: 0.12em;
-    min-height: 100vh;
-    padding: 2em;
-    margin: 0;
-    color: hsla(0, 0%, 0%, 0.85);
-    /* background-color: #170d24; */
-    /* background-image:
-      radial-gradient(ellipse at 10% 90%, #ffffff 0%, transparent 55%),
-      radial-gradient(ellipse at 90% 90%, #ffffff 0%, transparent 55%),
-      radial-gradient(ellipse at 90% 10%, #ffffff 0%, transparent 55%),
-      radial-gradient(ellipse at 10% 10%, #ffffff 0%, transparent 55%); */
-    width: 100%;
-    max-height: fit-content;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-.container h1 {
-    font-family: sans-serif;
-    text-align: center;
-    font-size: 40px;
-
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
 }
 
-.container h3 {
-    text-align: center;
-    letter-spacing: 0.05em;
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
 }
 
-.slidingprofile {
-    height: fit-content;
-    width: 70vw;
-    margin-top: 50px;
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-@media only screen and (max-width: 768px) {
-    .container {
-        width: 100%;
-        border: 1px solid black;
-    }
-
-    .slidingprofile {
-        width: 100%;
-    }
+.title {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
 }
 
-.imagesection img {
-    height: 295px;
-    border-radius: 30px;
+.subtitle {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
 }
 
-.lowersection {
-    display: flex;
-    background: transparent;    
-    height: 200px;
-    width: 90%;
-    margin-top: 80px;
-    justify-content: space-between;
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  margin-top: 25%;
+  color: #ffffff;
 }
 
-.likecards {    
-    width: 25%;
-    border: 1px solid black;
+.button {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #eb0a0a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #c6393e;
+}
+
+.footerText {
+  color: #ffffff;
+  font-size: 0.9rem;
+  margin-top: 2rem;
 }

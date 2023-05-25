@@ -13,10 +13,23 @@ function PatientDashboard() {
   const [slots, setSlots] = useState([]);
   const date = 1;
 
+  
+
   useEffect(() => {
-    axios.get(`${baseurl}/doctor-dashboard/${id}`).then((res) => {
+    axios
+    .get(
+      `${baseurl}/doctor-dashboard/${id}`,
+
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    )
+    .then((res) => {
       setNamee(res.data.name);
       console.log(res.data.name);
+      console.log(res.data.token)
     });
   }, [id]);
 
@@ -25,7 +38,6 @@ function PatientDashboard() {
       setSlots(res.data.appointments);
     });
   }, [id, date]);
-
 
   const navigate = useNavigate();
 
@@ -38,9 +50,7 @@ function PatientDashboard() {
   const handleedittiming = () => {
     navigate(`/doctor-dashboard/edit-timing/${id}`);
   };
-  const handletakehelpclick = () => {
-    navigate(`/doctor-dashboard/doctor-take-help/${id}`);
-  };
+
   const handlebuttonclick = () => {
     //
     navigate(`/doctor-dashboard/${id}`);
@@ -79,48 +89,52 @@ function PatientDashboard() {
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handleviewappointmentclick}>View Appointments</li>
             <li onClick={handleedittiming}>Edit Timing</li>
-            <li onClick={handletakehelpclick}>Take Help</li>
+
           </ul>
         </div>
         <div className={styles.mainsection}>
-          <h1 style={{color:'black'}}>Appointment Lists</h1>
-          {
-          udates?.map((dtaes)=>{
-            return(
-             <div className={styles.infosectionapp}>
-              <h3 style={{backgroundColor:'yellowgreen' , width:'fit-content'}}>{(dtaes).slice(0,10)}</h3>
-              <table>
-                <tr>
-                  <th>Patient Name</th>
-                  <th>Patient Email</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                </tr>
-                {slots?.map((app)=>{
-                  if(dtaes===app.date){
-                    return(
-                      <tr>
-                        <td>{app.patientName}</td>
-                        <td>{app.patientEmail}</td>
-                        <td>{(app.date).slice(0,10)}</td>
-                        <td>{app.time}</td>
-                        <td>{app.isConfirmed?'Confirmed':'Pending'}</td>
-
-                      </tr>
-                    )
-                  }
-                  else{
-                    return null;
-                  }
-                })}
-                
-              </table>
-             </div>
-            )
-          })
-          }
-
+          <h1 style={{ color: "black" }}>Appointment Lists</h1>
+          {udates?.map((dtaes) => {
+            return (
+              <div className={styles.infosectionapp}>
+                <h3 style={{ width: "fit-content" }}>
+                  Date : {dtaes.slice(0, 10)}
+                </h3>
+                <table>
+                  <tr style={{ fontSize: "20px" }}>
+                    <th>Patient Name</th>
+                    <th>Patient Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                  </tr>
+                  {slots?.map((app) => {
+                    if (dtaes === app.date) {
+                      let color1 = app.isConfirmed;
+                      return (
+                        <tr style={{ borderBottom: "1px solid black" }}>
+                          <td>{app.patientName}</td>
+                          <td>{app.patientEmail}</td>
+                          <td>{app.date.slice(0, 10)}</td>
+                          <td>{app.time}</td>
+                          <td
+                            style={{
+                              fontSize: "20px",
+                              color: color1 ? "green" : "red",
+                            }}
+                          >
+                            <b>{app.isConfirmed ? "Confirmed" : "Pending"}</b>
+                          </td>
+                        </tr>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
+                </table>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -12,18 +12,20 @@ const EditDoctorInfo = () => {
   const [email, setEmail] = useState('');
   const [specialty, setSpecialty] = useState('');
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+
   const {id} = useParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post(`${baseurl}/doctor-update-information/${id}`,{username,email,specialty,phone})
+    axios.post(`${baseurl}/doctor-update-information/${id}`,{username,email,specialty,phone,password})
     .then((res)=>{
         toast.success(res.data.message);
         setTimeout(() => {
             window.location.reload();
         }, 2000);
     })
-    console.log('Submitted!', username, email, specialty, phone);
+    console.log('Submitted!', username, email, specialty, phone , password);
   };
 
   return (
@@ -80,6 +82,14 @@ const EditDoctorInfo = () => {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </label>
         <button type="submit">Save</button>

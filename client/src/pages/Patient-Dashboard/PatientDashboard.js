@@ -10,7 +10,13 @@ function PatientDashboard() {
   const [namee, setNamee] = useState("");
   const { id } = useParams();
   useEffect(() => {
-    axios.get(`${baseurl}/patient-dashboard/${id}`).then((res) => {
+    axios.get(`${baseurl}/patient-dashboard/${id}`,
+
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then((res) => {
       setNamee(res.data.name);
       console.log(res.data.name);
     });
@@ -30,9 +36,7 @@ function PatientDashboard() {
   const handletakeappointmentclick = () => {
     navigate(`/patient-dashboard/take-appointment/${id}`);
   };
-  const handletakehelpclick = () => {
-    navigate(`/patient-dashboard/take-help/${id}`);
-  };
+
   const handlebuttonclick = () => {
     //
     navigate(`/patient-dashboard/${id}`);
@@ -67,7 +71,7 @@ function PatientDashboard() {
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Appointments</li>
-            <li onClick={handletakehelpclick}>Take Help</li>
+      
           </ul>
         </div>
         <div className={styles.mainsection}>

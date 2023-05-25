@@ -25,7 +25,13 @@ function BookAppointment() {
   const [datess, setDates] = useState("");
 
   useEffect(() => {
-    axios.get(`${baseurl}/doctor-dashboard/${id1}`).then((res) => {
+    axios.get(`${baseurl}/doctor-dashboard/${id1}`,
+
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then((res) => {
       setNamee(res.data.name);
 
       setdate(res.data.date);

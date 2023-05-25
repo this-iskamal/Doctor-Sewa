@@ -26,6 +26,10 @@ import DoctorEditInformation from "./components/DoctorEditInformation/DoctorEdit
 import EditDoctorInfo from "./components/EditDoctorInfo/EditDoctorInfo";
 import EditPatientInfo from "./components/EditPatientInfo/EditPatientInfo";
 import VerifyAppointments from "./components/AdminDashboard/VerifyAppointments";
+import PrivateRoute from "./PrivateRoute";
+import DoctorP from "./components/P/DoctorP";
+import PasswordReset from "./components/PasswordReset/PasswordReset";
+import AddAdminForm from "./components/AddAdminForm/AddAdminForm";
 
 // import Dashboard from "./components/AdminDashboard/Dashboard";
 // import AvailableDoctors from "./components/AdminDashboard/AvailableDoctors";
@@ -49,15 +53,35 @@ function App() {
       },
       {
         path: "/doctor-dashboard/:id",
-        element: <DoctorDashboard />,
+        element: (
+          <PrivateRoute>
+            <DoctorDashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/patient-dashboard/:id",
-        element: <PatientDashboard />,
+        element: (
+          <PrivateRoute>
+            <PatientDashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/edit-information/:id",
         element: <EditInformation />,
+      },
+      {
+        path: "/add-new-admin",
+        element: <AddAdminForm />,
+      },
+      {
+        path: "/password-reset",
+        element: <PasswordReset />,
+      },
+      {
+        path: "/doctor-profile-page/:id1/:id",
+        element: <DoctorP />,
       },
       {
         path: "/admin-dashboard/verify-appointments",
@@ -65,20 +89,28 @@ function App() {
       },
       {
         path: "/doctor-edit-information/:id",
-        element: <DoctorEditInformation />,
+        element: (
+          <PrivateRoute>
+            <DoctorEditInformation />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/edit-doctor-info/:id",
-        element: <EditDoctorInfo/>,
+        element: <EditDoctorInfo />,
       },
       {
         path: "/edit-patient-info/:id",
-        element: <EditPatientInfo/>,
+        element: <EditPatientInfo />,
       },
 
       {
         path: "/change-password/:id",
-        element: <ChangePassword />,
+        element: (
+          <PrivateRoute>
+            <ChangePassword />
+          </PrivateRoute>
+        ),
       },
 
       {
@@ -100,39 +132,78 @@ function App() {
       },
       {
         path: "/patient-dashboard/user-profile/:id",
-        element: <UserProfile />,
+        element: (
+          <PrivateRoute>
+            <UserProfile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/doctor-dashboard/doctor-user-profile/:id",
-        element: <DoctorUserProfile />,
+        element: (
+          <PrivateRoute>
+            <DoctorUserProfile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/doctor-dashboard/view-appointments/:id",
-        element: <ViewAppointments />,
+        element: (
+          <PrivateRoute>
+            <ViewAppointments />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/doctor-dashboard/edit-timing/:id",
-        element: <EditTiming />,
+        element: (
+          <PrivateRoute>
+            {" "}
+            <EditTiming />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/doctor-dashboard/doctor-take-help/:id",
-        element: <DoctorTakeHelp />,
+        element: (
+          <PrivateRoute>
+            <DoctorTakeHelp />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/patient-dashboard/find-doctors/:id",
-        element: <FindDoctors />,
+        element: (
+          <PrivateRoute>
+            {" "}
+            <FindDoctors />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/patient-dashboard/take-appointment/:id",
-        element: <TakeAppointment />,
+        element: (
+          <PrivateRoute>
+            <TakeAppointment />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/patient-dashboard/take-help/:id",
-        element: <TakeHelp />,
+        element: (
+          <PrivateRoute>
+            {" "}
+            <TakeHelp />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/book-appointment/:id1/:id",
-        element: <BookAppointment />,
+        element: (
+          <PrivateRoute>
+            <BookAppointment />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/admin-dashboard",

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./UserProfile.module.css";
-import testimage from "../../assets/images/left.jpg";
+// import testimage from "../../assets/images/left.jpg";
 import baseurl from "../../assets/baseurl";
 
 function UserProfile() {
@@ -15,7 +15,13 @@ function UserProfile() {
 
   const { id } = useParams();
   useEffect(() => {
-    axios.get(`${baseurl}/patient-dashboard/${id}`).then((res) => {
+    axios.get(`${baseurl}/patient-dashboard/${id}`,
+
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then((res) => {
       setNamee(res.data.name);
       setEmail(res.data.email);
       setGender(res.data.gender);
@@ -35,9 +41,7 @@ function UserProfile() {
   const handletakeappointmentclick = () => {
     navigate(`/patient-dashboard/take-appointment/${id}`);
   };
-  const handletakehelpclick = () => {
-    navigate(`/patient-dashboard/take-help/${id}`);
-  };
+
   const handlebuttonclick = () => {
     //
     navigate(`/patient-dashboard/${id}`);
@@ -72,16 +76,13 @@ function UserProfile() {
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Appointments</li>
-            <li onClick={handletakehelpclick}>Take Help</li>
+ 
           </ul>
         </div>
         <div className={styles.mainsection}>
           <div className={styles.userprofile}>
             <div className={styles.photochange}>
-              <div className={styles.userimage}>
-                <img src={testimage} alt="" />
-              </div>
-              <div className={styles.button}>Change Image</div>
+              
             </div>
             <div className={styles.infosection}>
               <ul>

@@ -36,7 +36,7 @@ function ChangePassword() {
         if(res.data.success){
             toast.success(res.data.message)
             setTimeout(() => {
-                window.close();
+                window.close('','_parent');
             }, 2500);
         }
       })

@@ -27,7 +27,7 @@
 .doctorssections {
     min-height: 10%;
     height: fit-content;
-    width: 40%;
+    width: 30%;
     border: 1px solid black;
     background: rgb(129, 226, 255);
 }
@@ -39,7 +39,7 @@
 .patientssections {
     height: 10%;
     height: fit-content;
-    width: 40%;
+    width: 30%;
     border: 1px solid black;
     
     background: rgb(129, 226, 255);

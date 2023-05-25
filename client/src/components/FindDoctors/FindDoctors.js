@@ -25,7 +25,13 @@ function FindDoctors() {
   const [query, setQuery] = useState("");
   useEffect(() => {
     axios
-      .get(`${baseurl}/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`,
+
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setNamee(res.data.name);
         console.log(res.data.name);
@@ -97,9 +103,7 @@ function FindDoctors() {
   const handletakeappointmentclick = () => {
     navigate(`/patient-dashboard/take-appointment/${id}`);
   };
-  const handletakehelpclick = () => {
-    navigate(`/patient-dashboard/take-help/${id}`);
-  };
+
   const handletakeappointment = (id1) => {
     window.open(`/book-appointment/${id1}/${id}`, "_blank");
   };
@@ -145,7 +149,7 @@ function FindDoctors() {
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Appointments</li>
-            <li onClick={handletakehelpclick}>Take Help</li>
+            
           </ul>
         </div>
         <div className={styles.mainsection}>
@@ -212,11 +216,20 @@ function FindDoctors() {
                     </Card.Text>
                     <Button
                       variant="primary"
+                      style={{marginBottom:'5px'}}
+                      className={styles.buttonondoctor}
+                      onClick={() => window.open(`/doctor-profile-page/${doctordetail._id}/${id}`)}
+                    >
+                      View Profile
+                    </Button>
+                    <Button
+                      variant="primary"
                       className={styles.buttonondoctor}
                       onClick={() => handletakeappointment(doctordetail._id)}
                     >
                       Take Appointment
                     </Button>
+                    
                   </Card.Body>
                 </Card>
               );

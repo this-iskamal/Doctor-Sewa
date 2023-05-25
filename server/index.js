@@ -42,7 +42,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-
+const authMiddleware = require('./authMiddleware')
 //websocket lis
 
 let ADMINAPPOINTMENTINFO = [];
@@ -244,6 +244,49 @@ app.post("/register", async (req, res) => {
     }
   }
 });
+app.post("/register-admin", async (req, res) => {
+  let responseSent = false;
+  try {
+    const existuser = await LogindataSchema.findOne({ email: req.body.email });
+    if (existuser) {
+      res.status(200).send({ message: "user already exist", success: false });
+      responseSent = true;
+    }
+    const existphone = await LogindataSchema.findOne({ phone: req.body.phone });
+    if (existphone) {
+      res.status(200).send({ message: "phone already exist", success: false });
+      responseSent = true;
+    }
+    if (!responseSent && !existuser && !existphone) {
+      const hashpwd = await bcrypt.hash(req.body.password, saltrounds);
+      const newuser = new LogindataSchema({
+        username: req.body.name,
+        email: req.body.email,
+        password: hashpwd,
+        gender: 'admin',
+        age: 'admin',
+        district: req.body.address,
+        phone: 'admin',
+        youare: 'admin',
+      });
+      await newuser.save();
+      // emitdata();
+      const data = await LogindataSchema.find({});
+      io.emit("data", data);
+      console.log(
+        `Action Signup By ${req.body.username} From ${
+          req.body.address
+        } As admin`
+      );
+      res.status(200).send({ message: "signup success", success: true });
+    }
+  } catch (err) {
+    console.log(err);
+    if (!responseSent) {
+      res.status(200).send({ message: "signup error", success: false });
+    }
+  }
+});
 
 app.post("/login", async (req, res) => {
   try {
@@ -261,11 +304,14 @@ app.post("/login", async (req, res) => {
           .status(200)
           .send({ message: "password dont match", success: false });
       } else if (user && ispasswordmatch) {
+        const token = jwt.sign({id:user._id},process.env.JWT_SECRET,
+          {expiresIn:"1d"})
         res.status(200).send({
           message: "login success",
           success: true,
           role: user.youare,
           id: user._id,
+          data:token
         });
       }
     }
@@ -273,7 +319,7 @@ app.post("/login", async (req, res) => {
     console.log(err);
   }
 });
-app.post("/doctorlogin", async (req, res) => {
+app.post("/doctorlogin",  async (req, res) => {
   try {
     const doctor = await DoctorLogindataSchema.findOne({
       email: req.body.email,
@@ -292,9 +338,11 @@ app.post("/doctorlogin", async (req, res) => {
           .send({ message: "password dont match", success: false });
       } else if (doctor && ispasswordmatch) {
         if (doctor.condition === "Active") {
+          const token = jwt.sign({id:doctor._id},process.env.JWT_SECRET,
+            {expiresIn:"1d"})
           res
             .status(200)
-            .send({ message: "login success", id: doctor._id, success: true });
+            .send({ message: "login success", id: doctor._id,data:token, success: true });
         } else {
           res
             .status(200)
@@ -317,13 +365,17 @@ app.get("/admin-dashboard", async (req, res) => {
     const doctordetails = await DoctorLogindataSchema.find({
       condition: "Active",
     });
-    if (!patientdetails && !doctordetails) {
+    const admindetails = await LogindataSchema.find({ youare: "admin" });
+
+    if (!patientdetails && !doctordetails ) {
       res.status(200).send({ message: "Kei ni bhetina", success: false });
     } else {
       const data = await LogindataSchema.find({ youare: "patient" });
       const data1 = await DoctorLogindataSchema.find({
         condition: "Active",
       });
+      const adminN = await LogindataSchema.count({ youare: "admin" });
+
       const dataN = await LogindataSchema.count({ youare: "patient" });
       const data1N = await DoctorLogindataSchema.count({
         condition: "Active",
@@ -337,6 +389,8 @@ app.get("/admin-dashboard", async (req, res) => {
         message: "retrieving data",
         data,
         data1,
+        adminN,
+        admindetails,
         dataN,
         data1N,
         success: true,
@@ -367,7 +421,7 @@ app.get("/get-doctor-details", async (req, res) => {
   }
 });
 
-app.get("/patient-dashboard/:id", async (req, res) => {
+app.get("/patient-dashboard/:id",authMiddleware, async (req, res) => {
   try {
     const patient = await LogindataSchema.findOne({ _id: req.params.id });
 
@@ -387,7 +441,7 @@ app.get("/patient-dashboard/:id", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
-app.get("/doctor-dashboard/:id", async (req, res) => {
+app.get("/doctor-dashboard/:id",authMiddleware, async (req, res) => {
   try {
     const patient = await DoctorLogindataSchema.findOne({ _id: req.params.id });
     if (patient) {
@@ -632,7 +686,7 @@ app.post("/patient-update-information/:id", async (req, res) => {
 });
 app.post("/doctor-update-information/:id", async (req, res) => {
   try {
-    console.log(req.body.username)
+    
     const query = {
       _id: req.params.id,
     };
@@ -659,6 +713,11 @@ app.post("/doctor-update-information/:id", async (req, res) => {
     const updatePhone = {
       $set: {
         phone: req.body.phone,
+      },
+    };
+    const updatePassword = {
+      $set: {
+        phone: req.body.password,
       },
     };
     const updateSpecialty = {
@@ -703,6 +762,12 @@ app.post("/doctor-update-information/:id", async (req, res) => {
         returnOriginal: false,
       });
       console.log('specialty change')
+    }
+    else if (req.body.password) {
+      await DoctorLogindataSchema.findOneAndUpdate(query, updatePassword, {
+        returnOriginal: false,
+      });
+      console.log('passsword change')
     }
     else if (req.body.phone) {
       await DoctorLogindataSchema.findOneAndUpdate(query, updatePhone, {
@@ -1051,6 +1116,76 @@ app.post("/send-otp/:id", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
+app.post("/send-otpp", async (req, res) => {
+  try {
+
+    const min = 100000;
+    const max = 999999;
+    const otp = Math.floor(Math.random() * (max - min + 1) + min);
+    const patient = await LogindataSchema.findOne({
+      email: req.body.email,
+    });
+    if(patient){
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL, // generated ethereal user
+        pass: process.env.PASS, // generated ethereal password
+      },
+    });
+    const mailOptions = {
+      from: "doctorsewa770@gmail.com",
+      to: patient.email,
+      subject: "Change Password OTP",
+      html: `
+        <body>
+          <h1>Password Change Request for OTP</h1>
+          <p>Dear ${patient.username},</p>
+         
+          <br>
+          <p>Your OTP is <br> <b><h1>${otp}</h1></b>
+          <br>
+
+          <p>Please do not share your OTP with others </p>
+
+          <p>Sincerely,</p>
+          <p>Doctor Sewa Team</p>
+        </body>
+      `,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending OTP:", error);
+      } else {
+        console.log(`OTP sent to ${patient.username}`);
+      }
+    });
+
+    const query = { email:req.body.email };
+    const update = { $set: { otp: otp } };
+    await LogindataSchema.findOneAndUpdate(query, update, {
+      returnOriginal: false,
+    });
+    res
+      .status(200)
+      .send({ message: "OTP sent successfully to your email", success: true });
+    setTimeout(async () => {
+      const query1 = { _id: req.params.id };
+      const update1 = { $set: { otp: "" } };
+      await LogindataSchema.findOneAndUpdate(query1, update1, {
+        returnOriginal: false,
+      });
+      console.log("otp destroyed");
+    }, 300000);}
+    else{
+      res.status(200).send({message:"email doesn't exist" , success:false})
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
 
 app.post("/otp-confirm/:id", async (req, res) => {
   try {
@@ -1059,6 +1194,20 @@ app.post("/otp-confirm/:id", async (req, res) => {
     });
     if (patient.otp === req.body.password) {
       res.status(200).send({ message: "OTP confirmed", success: true });
+    } else {
+      res.status(200).send({ message: "Invalid OTP", success: false });
+    }
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+  }
+});
+app.post("/otp-confirmm", async (req, res) => {
+  try {
+    const patient = await LogindataSchema.findOne({
+      email:req.body.email,
+    });
+    if (patient.otp === req.body.otp) {
+      res.status(200).send({ message: "OTP confirmed",id:patient._id, success: true });
     } else {
       res.status(200).send({ message: "Invalid OTP", success: false });
     }
@@ -1444,6 +1593,6 @@ io.on("connection", (socket) => {
   // });
 });
 
-server.listen(PORT,() => {
+server.listen(Port,() => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });

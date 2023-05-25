@@ -24,7 +24,13 @@ function TakeAppointment() {
   const { id } = useParams();
   useEffect(() => {
     axios
-      .get(`${baseurl}/patient-dashboard/${id}`)
+      .get(`${baseurl}/patient-dashboard/${id}`,
+
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setNamee(res.data.name);
         // console.log(res.data.name);
@@ -89,9 +95,7 @@ function TakeAppointment() {
   const handletakeappointmentclick = () => {
     navigate(`/patient-dashboard/take-appointment/${id}`);
   };
-  const handletakehelpclick = () => {
-    navigate(`/patient-dashboard/take-help/${id}`);
-  };
+
   // const handlecancelbuttonclick = () => {};
   const handlebuttonclick = () => {
     //
@@ -142,7 +146,7 @@ function TakeAppointment() {
             <li onClick={handleprofileclick}>Profile</li>
             <li onClick={handlefinddoctorclick}>Find Doctors</li>
             <li onClick={handletakeappointmentclick}>Appointments</li>
-            <li onClick={handletakehelpclick}>Take Help</li>
+            
           </ul>
         </div>
         <div className={styles.mainsection}>

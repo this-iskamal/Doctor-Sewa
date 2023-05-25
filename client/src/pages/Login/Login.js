@@ -44,9 +44,11 @@ function Login(props) {
           toast.success(res.data.message);
           setTimeout(() => {
             if (res.data.role === "patient") {
+              localStorage.setItem("token",res.data.data)
               navigate(`/patient-dashboard/${res.data.id}`);
             }
             if (res.data.role === "admin") {
+              localStorage.setItem("token",res.data.data)
               navigate("/admin-dashboard");
             }
           }, 2000);
@@ -60,6 +62,7 @@ function Login(props) {
         .then((res) => {
           if (res.data.success === true) {
             toast.success(res.data.message);
+            localStorage.setItem("token",res.data.data)
             setTimeout(() => {
               navigate(`/doctor-dashboard/${res.data.id}`);
             }, 2000);
@@ -69,7 +72,9 @@ function Login(props) {
         });
     }
   };
-
+  const handlepass = () =>{
+    window.open('password-reset','_blank')
+  }
   return (
     <div className={styles.container}>
       <div className={styles.left}></div>
@@ -117,7 +122,7 @@ function Login(props) {
           <button onClick={handleloginclick}>Login</button>
         </div>
         <div className={styles.forget}>
-          <a href="/forgot-password">Forgot your Password</a>
+           <p onClick={handlepass} style={{color:'green' ,cursor:'pointer'}}>Forgot your Password</p>
         </div>
         <div className={styles.copyright}>
           <p>
