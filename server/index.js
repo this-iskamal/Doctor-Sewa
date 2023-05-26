@@ -1662,6 +1662,6 @@ io.on("connection", (socket) => {
   // });
 });
 
-server.listen(PORT,'192.168.0.114',() => {
+server.listen(PORT,() => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });
