@@ -420,6 +420,24 @@ app.get("/get-doctor-details", async (req, res) => {
     res.status(200).send({ message: "Internal error", success: false });
   }
 });
+app.get("/get-doctor-details/:id", async (req, res) => {
+  try {
+    const doctordetails = await DoctorLogindataSchema.findOne({
+      id:req.params.id1,
+    });
+    if (doctordetails) {
+    
+      res.status(200).send({
+        message: "retrieving data",
+        doctordetails,
+        success: true,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(200).send({ message: "Internal error", success: false });
+  }
+});
 
 app.get("/patient-dashboard/:id",authMiddleware, async (req, res) => {
   try {
@@ -1028,6 +1046,57 @@ app.get("/admin-appointment-info-verify", async (req, res) => {
     res.status(200).send({ message: "internal error", success: false });
   }
 });
+
+app.post(`/docor-cancel-appointment/:id`,async(req,res)=>{
+  try {
+    const date1=req.body.d+'T00:00:00.000+00:00';
+    
+    
+    const appointm = await Appointment.find({
+      patientid: { $exists: true, $ne: "" },
+      date: date1,
+      doctorid : req.params.id,
+    });
+   
+    appointm.forEach((appoint) => {
+
+      const mailOptions = {
+        from: "doctorsewa770@gmail.com",
+        to: appoint.patientEmail,
+        subject: "Appointment Cancellation: Your appointment is Cancelled",
+        html: `
+          <body>
+            <h1>Appointment Cancellation Reminder</h1>
+            <p>Dear ${appoint.patientName},</p>
+            <p>This is to notify that your appointment with <b>${appoint.doctorName} on </b> <span style='color:red'><b>  ${appoint.date} at ${appoint.time}</b></span> was cancelled by the Doctor.</p>
+            <p>Dr. ${appoint.doctorName} will not be available for ${appoint.date} because He said that: <br> "${req.body.reason}"<br>.</p>
+            <p>We apologize for the inconvinience . </p>
+            <p>Thank you for choosing our service for your healthcare needs.</p>
+            <p>Sincerely,</p>
+            <p>Doctor Sewa Team</p>
+          </body>
+        `,
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Error sending reminder email:", error);
+        } else {
+          console.log(`Reminder email sent to ${appoint.patientName}`);
+        }
+      });
+    });
+    await Appointment.deleteMany({
+      doctorid:req.params.id,
+      date:date1,
+    })
+    
+    res.status(200).send({ message: "Apppointments date deleted", success: true });
+
+  } catch (error) {
+    res.status(200).send({ message: "internal error", success: false });
+    
+  }
+})
 app.get("/admin-appointment-info-verify/:id", async (req, res) => {
   try {
     
@@ -1593,6 +1662,6 @@ io.on("connection", (socket) => {
   // });
 });
 
-server.listen(PORT,() => {
+server.listen(PORT,'192.168.0.114',() => {
   console.log(`Server started on 192.168.0.114:${PORT}`);
 });

@@ -210,7 +210,18 @@ function Doctors() {
                     >
                       Edit
                     </Button>
-
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        window.open(
+                          `/doctor-profile-page/${doctordetail._id}/admin`,
+                          "_blank"
+                        )
+                      }
+                      className={styles.buttonondoctor}
+                    >
+                      Profile
+                    </Button>
                     <Button
                       variant="danger"
                       onClick={() => handledeletedoctor(doctordetail._id)}

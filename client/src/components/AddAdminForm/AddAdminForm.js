@@ -1,40 +1,48 @@
-import React, { useState } from 'react';
-import styles from './AddAdminForm.module.css';
+import React, { useState } from "react";
+import styles from "./AddAdminForm.module.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from 'axios';
-import baseurl from '../../assets/baseurl';
+import axios from "axios";
+import baseurl from "../../assets/baseurl";
 
 const AddAdminForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Send form data to server or perform desired action
-    axios.post(`${baseurl}/register-admin`,{name,email,phone,address,password})
-    .then((res)=>{
-        toast.success(res.data.message)
-        if(res.success===true){
-        setTimeout(() => {
+    axios
+      .post(`${baseurl}/register-admin`, {
+        name,
+        email,
+        phone,
+        address,
+        password,
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        if (res.success === true) {
+          setTimeout(() => {
+            setName("");
+            setEmail("");
+            setPhone("");
+            setAddress("");
+            setPassword("");
             window.close();
-        }, 2000);}
-    })
-    console.log('Submitted!', name, email, phone, address, password);
+          }, 2000);
+        }
+      });
+    console.log("Submitted!", name, email, phone, address, password);
     // Reset form fields
-    setName('');
-    setEmail('');
-    setPhone('');
-    setAddress('');
-    setPassword('');
   };
 
   return (
     <div>
-        <ToastContainer />
+      <ToastContainer />
 
       <h1>Add New Admin</h1>
       <form className={styles.form} onSubmit={handleSubmit}>

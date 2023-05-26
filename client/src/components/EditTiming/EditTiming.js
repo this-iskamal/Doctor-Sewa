@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import baseurl from '../../assets/baseurl'
-
+import { Modal, Button } from 'react-bootstrap';
 import "react-toastify/dist/ReactToastify.css";
 // import DateTimePicker from "react-datetime-picker";
 import styles from "./EditTiming.module.css";
@@ -14,6 +14,8 @@ function PatientDashboard() {
   const [slots, setSlots] = useState([]);
  const date = '2023-05-25T00:00:00.000+00:00';
  const [showMenu, setShowMenu] = useState(false);
+ const [showPrompt, setShowPrompt] = useState(false);
+const [cancellationReason, setCancellationReason] = useState('');
 
 
   const { id } = useParams();
@@ -101,8 +103,56 @@ function PatientDashboard() {
   udates.sort();
 console.log(udates)
 
+const [d,sd]=useState('')
+const deleteappointment = (date1) => {
+  sd(date1)
+  setShowPrompt(true);
+  
+};
+
+const handlePromptSubmit = () => {
+  if (cancellationReason.trim() !== '') {
+    axios
+      .post(`${baseurl}/docor-cancel-appointment/${id}`, { d, reason: cancellationReason })
+      .then((res) => {
+        if (res.data.success === true) toast.success(res.data.message);
+        else toast.warn(res.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      });
+  } else {
+    toast.warn('Please enter the cancellation reason');
+  }
+};
+const handlePromptClose = () => {
+  setShowPrompt(false);
+  setCancellationReason('');
+};
+
   return (
     <div className={styles.container}>
+       <Modal show={showPrompt} onHide={handlePromptClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Appointment Cancellation Reason</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <input
+          type="text"
+          value={cancellationReason}
+          onChange={(e) => setCancellationReason(e.target.value)}
+          placeholder="Enter the cancellation reason"
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handlePromptClose}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={handlePromptSubmit}>
+          Submit
+        </Button>
+      </Modal.Footer>
+    </Modal>
       <div className={styles.topsection}>
         <h1>Doctor Sewa</h1>
         <p>Hello, {namee}</p>
@@ -159,7 +209,16 @@ console.log(udates)
               udates?.map((date)=>{
                 return(
                   <div className={styles.apptime}>
-                  <h1>{moment(date)
+                    
+                  <h1> 
+                  <button
+                  className={styles.redbackground}
+                  style={{marginRight:'50px' , background:'none' , backgroundColor:'red'}}
+                  onClick={() => deleteappointment(date)}
+                >
+                  <i class="fa-sharp fa-solid fa-trash"></i>
+                </button>
+                    {moment(date)
                   
                   .format("dddd ,  DD MMM YYYY")
                   .toString()}  </h1>
